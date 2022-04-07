@@ -20,23 +20,23 @@ is presented below:
 
 The model is conceptualized in terms of five Markov States: 
 
-Primary THR (`Primary_THR`)
+Primary THR (`PRI_THR`)
   : All patients begin the model with a primary THR procedure. 
   
-Successful Primary (`Success_Primary`)
+Successful Primary (`PRI_Success`)
   : Patients transition to this state if their primary THR was successful. 
   
-Revision THR
+Revision THR (`REV_THR`)
   : This state represents those patients for whom a revision hip replacement is 
   required due to failure. Failure may be attributed to infection or loosening. 
   While patients can only remain in this state for one cycle, they can revisit 
   this state more than once. This is meant to reflect the fact that some 
   patients may require more than one revision operation. 
   
-Successful Revision
+Successful Revision (`REV_Success`)
   : Patients transition to this state if their revision THR was successful. 
   
-Death
+Death (`Death`)
   : The model assumes that patients can die at any point in the model. 
   Transitions can be attributed to operative mortality or the underlying risk of 
   death (given age and gender). 
@@ -47,7 +47,7 @@ intervention. Benefits of the intervention were measured in terms of Quality
 Adjusted Life Years. 
 
 ## Model Parameters
-
+Insert description about the model parameters here? 
 
 
 2. Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. Modelling 
