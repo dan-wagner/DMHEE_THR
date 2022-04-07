@@ -11,7 +11,49 @@ evaluation. Oxford: Oxford University Press; 2006. 237 p. (Briggs A, Gray A,
 editors. Oxford handbooks in health economic evaluation). 
 
 # Model Summary
-Insert description of the model here. 
+Briggs et al. reported on the development of a Markov model which was used to 
+predict the prognosis of patients who have undergone primary total hip 
+replacement (THR) surgery (2). A diagrammatic representation of the model 
+is presented below: 
+
+![Structure of THR Markov Model](docs/Diagrams/THR-Model.png)
+
+The model is conceptualized in terms of five Markov States: 
+
+Primary THR (`Primary_THR`)
+  : All patients begin the model with a primary THR procedure. 
+  
+Successful Primary (`Success_Primary`)
+  : Patients transition to this state if their primary THR was successful. 
+  
+Revision THR
+  : This state represents those patients for whom a revision hip replacement is 
+  required due to failure. Failure may be attributed to infection or loosening. 
+  While patients can only remain in this state for one cycle, they can revisit 
+  this state more than once. This is meant to reflect the fact that some 
+  patients may require more than one revision operation. 
+  
+Successful Revision
+  : Patients transition to this state if their revision THR was successful. 
+  
+Death
+  : The model assumes that patients can die at any point in the model. 
+  Transitions can be attributed to operative mortality or the underlying risk of 
+  death (given age and gender). 
+  
+The model assumes a cycle length of 1 year. It will be evaluated over time 
+horizon of 60 years to estimate the lifetime costs and benefits of each 
+intervention. Benefits of the intervention were measured in terms of Quality 
+Adjusted Life Years. 
+
+## Model Parameters
+
+
+
+2. Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. Modelling 
+the cost-effectiveness of primary hip replacement: how cost-effective is the 
+Spectron compared to the Charnley prosthesis? 2003 Dec;52. 
+
 
 # Project Organization
 TODO: Provide an explanation for how the project is organized here. 
@@ -22,8 +64,26 @@ TODO: Provide an explanation for how the project is organized here.
 :x: Ice-Box.
 
 ## :warning: Develop THR Model
-* Start with model evaluating two alternative prostheses.   
-  - Include capability for deterministic and probabilistic simulation. 
+
+* :warning: Prepare Parameter Inputs from raw data. 
+  - :warning: Transition Probabilities
+    - :white_check_mark: Add raw data to `data/data-raw`. 
+    - :white_check_mark: `getParams()` function to prepare parameter input list.
+    - :white_check_mark: Generate Parameters from raw data. 
+  - :x: Costs
+    - :x: Add raw data sets to `data/data-raw`. 
+    - :x: Update `getParams()` to add new costing parameters. 
+  - :x: Utilities
+    - :x: Add raw data sets to `data/data-raw`. 
+    - :x: Update `getParams()` to add new utility parameters. 
+
+* :warning: Develop Model Code | `runModel()`. 
+  - :warning: Function to define the transition Matrix. `define_tmat()`. 
+    - :x: Time-Independent Model Parameters
+    - :x: Time-Dependent Model Parameters. 
+  - :x: Function to track the cohort through the model. `track_cohort()`. 
+  - :x: Function to estimate Costs
+  - :x: Function to estimate utilities. 
 
 ## :x: Perform Simulations
 
