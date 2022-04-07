@@ -79,8 +79,10 @@ TODO: Provide an explanation for how the project is organized here.
 
 * :warning: Develop Model Code | `runModel()`. 
   - :warning: Function to define the transition Matrix. `define_tmat()`. 
-    - :x: Time-Independent Model Parameters
-    - :x: Time-Dependent Model Parameters. 
+    - :white_check_mark: Time-Independent Model Parameters
+    - :warning: Time-Dependent Model Parameters. `calc_TimeDeps()`
+      - :warning: Age specific Mortality Risk `calc_MR`. 
+      - :x: Revision Risk as a function of Age, Sex, Time. `calc_RR()`. 
   - :x: Function to track the cohort through the model. `track_cohort()`. 
   - :x: Function to estimate Costs
   - :x: Function to estimate utilities. 
