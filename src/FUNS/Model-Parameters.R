@@ -47,7 +47,9 @@ getParams <- function(File = "THR-Params.rds") {
       list(OMR = OMR, 
            RRR = RRR, 
            LifeTables = LT, 
-           Survival = SurvFit)
+           Survival = SurvFit, 
+           Cost_j = Cost_j, 
+           Cost_States = Cost_states)
     
     ## write to data-gen/Model-Params
     Param.Path <- file.path(Params.Dir, File)
