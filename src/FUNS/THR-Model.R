@@ -96,3 +96,23 @@ cost_cohort <- function(trace,
   # Return Output
   return(Costs)
 }
+
+# Estimate Effects #############################################################
+effects_cohort <- function(trace, 
+                           State_Util) {
+  # Estimate Life Years
+  LYs <- rowSums(x = trace[, !colnames(trace) %in% "Death"], 
+                 na.rm = FALSE, 
+                 dims = 1)
+  # Estimate Utilities
+  Utilities <- trace[, !colnames(trace) %in% "Death"]
+  for (i in seq_along(1:nrow(Utilities))) {
+    Utilities[i,] <- Utilities[i,] * State_Util
+  }
+  Utilities <- rowSums(x = Utilities, na.rm = FALSE, dims = 1)
+  
+  # Combine Results
+  Result <- cbind(LYs = LYs, QALYs = Utilities)
+  
+  return(Result)
+}

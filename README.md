@@ -84,7 +84,7 @@ TODO: Provide an explanation for how the project is organized here.
 
 ## :warning: Develop THR Model
 
-* :warning: Prepare Parameter Inputs from raw data. 
+* :white_check_mark: Prepare Parameter Inputs from raw data. 
   - :white_check_mark: Transition Probabilities
     - :white_check_mark: Add raw data to `data/data-raw`. 
     - :white_check_mark: `getParams()` function to prepare parameter input list.
@@ -110,7 +110,7 @@ TODO: Provide an explanation for how the project is organized here.
   - :white_check_mark: Function to track the cohort through the model. `track_cohort()`. 
   - :white_check_mark: Function to estimate Costs: `cohort_costs()`. 
       - :white_check_mark: Add discounting to `cohort_costs()` function. 
-  - :x: Function to estimate effects. `cohort_effects()`. Will return effects 
+  - :warning: Function to estimate effects. `cohort_effects()`. Will return effects 
   measured in terms of Life Years (`LYs`) and QALYs (`QALY`). 
     - :x: Add discounting to `cohort_effects()` function. 
 
