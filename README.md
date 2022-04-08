@@ -47,7 +47,18 @@ intervention. Benefits of the intervention were measured in terms of Quality
 Adjusted Life Years. 
 
 ## Model Parameters
-Insert description about the model parameters here? 
+
+* Costing
+  - Cost parameters were organized into two distinct groups: 
+    - i) The unit cost for each prosthesis considered in the economic 
+    evaluation. These values were originally obtained from manufacturer list 
+    prices. 
+    - ii) The costs incurred at each markov state. These values were identified 
+    in a review of the different units involved in THR procedures. A successful 
+    primary or revision THR was assumed to incur the same cost. Meanwhile, the 
+    cost of a primary THR was set to 0 since all patients will travel through 
+    this health state. The original review found that the cost of a revision 
+    THR was 5294 GBP (SE 1487). 
 
 
 2. Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. Modelling 
