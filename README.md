@@ -89,7 +89,8 @@ TODO: Provide an explanation for how the project is organized here.
       - :white_check_mark: Age specific Mortality Risk `calc_MR`. 
       - :white_check_mark: Revision Risk as a function of Age, Sex, Time. `calc_RR()`. 
   - :white_check_mark: Function to track the cohort through the model. `track_cohort()`. 
-  - :warning: Function to estimate Costs: `cohort_costs()`. 
+  - :white_check_mark: Function to estimate Costs: `cohort_costs()`. 
+      - :white_check_mark: Add discounting to `cohort_costs()` function. 
   - :x: Function to estimate utilities. 
 
 ## :x: Perform Simulations

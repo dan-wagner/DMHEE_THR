@@ -67,6 +67,7 @@ track_cohort <- function(Q,
 cost_cohort <- function(trace, 
                         Cost_j, 
                         Cost_States, 
+                        cDR = 0.06,
                         nStart = 1000) {
   # Cost at Cycle = 0, all patients in PRI_THR
   Cohort0 <- c(nStart, rep(0, ncol(trace)-1))
@@ -85,6 +86,9 @@ cost_cohort <- function(trace,
   StateCosts <- 
     (trace[,!colnames(trace) %in% "Death"] * StateCosts) |> 
     rowSums(na.rm = FALSE, dims = 1)
+  
+  ## Discount StateCosts
+  StateCosts <- StateCosts/((1+cDR)^(1:nrow(trace)))
   
   # Combine Initial and Cycle Costs
   Costs <- c(Cost0, StateCosts)
