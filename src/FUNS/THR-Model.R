@@ -62,3 +62,33 @@ track_cohort <- function(Q,
   
   return(trace)
 }
+
+# Estimate Costs (Costs) #######################################################
+cost_cohort <- function(trace, 
+                        Cost_j, 
+                        Cost_States, 
+                        nStart = 1000) {
+  # Cost at Cycle = 0, all patients in PRI_THR
+  Cohort0 <- c(nStart, rep(0, ncol(trace)-1))
+  names(Cohort0) <- colnames(trace)
+  Cost0 <- Cost_States
+  Cost0["PRI_THR"] <- Cost0["PRI_THR"] + Cost_j
+  Cost0 <- Cohort0[-5] * Cost0
+  Cost0 <- sum(Cost0)
+  
+  # Estimate Costs for each Cycle and Health State
+  StateCosts <- 
+    replicate(n = nrow(trace), 
+              expr = Cost_States, simplify = TRUE) |> 
+    t()
+  
+  StateCosts <- 
+    (trace[,!colnames(trace) %in% "Death"] * StateCosts) |> 
+    rowSums(na.rm = FALSE, dims = 1)
+  
+  # Combine Initial and Cycle Costs
+  Costs <- c(Cost0, StateCosts)
+  
+  # Return Output
+  return(Costs)
+}
