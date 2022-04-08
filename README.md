@@ -73,10 +73,14 @@ TODO: Provide an explanation for how the project is organized here.
   - :warning: Costs
     - :white_check_mark: Add state costs to `data/data-raw`. 
     - :white_check_mark: Add costs for each prosthesis (`STD`, `NP1`).
-    - :x: Update `getParams()` to add new costing parameters. 
+    - :white_check_mark: Update `getParams()` to add new costing parameters. 
+    - :white_check_mark: Re-generate `data/data-gen/Model-Params/THR-Params.rds` 
+    with costing parameters. 
   - :x: Utilities
     - :x: Add raw data sets to `data/data-raw`. 
     - :x: Update `getParams()` to add new utility parameters. 
+    - :x: Re-generate `data/data-gen/Model-Params/THR-Params.rds` with utility 
+    parameters. 
 
 * :warning: Develop Model Code | `runModel()`. 
   - :white_check_mark: Function to define the transition Matrix. `define_tmat()`. 
