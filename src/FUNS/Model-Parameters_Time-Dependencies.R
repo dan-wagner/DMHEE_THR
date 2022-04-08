@@ -56,13 +56,17 @@ calc_RevisionRisk <- function(Survival,
   Cycle <- 1:nCycles
   
   RevisionRisk <- 
-    sapply(X = Lambda, 
-           FUN = \(sex){
-             sapply(X = rr, 
-                    FUN = \(risk){
-                      1 - exp(sex * rr * (((Cycle - 1)^GMMA) - (Cycle ^ GMMA)))
-                    })
-           }, simplify = "array")
+  sapply(X = Lambda, 
+         FUN = \(sex){
+           sapply(X = rr, 
+                  FUN = \(j){
+                    1- exp(sex * j * (((Cycle-1)^GMMA) - (Cycle^GMMA)))
+                   }, 
+                  simplify = TRUE
+                   )
+         }, 
+         simplify = "array"
+         )
   
   names(dimnames(RevisionRisk)) <- c("Cycle", "j", "Gender")
   
