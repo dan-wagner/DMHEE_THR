@@ -2,7 +2,7 @@
 calc_MR <- function(LT, Age0 = 60, nCycles = 60) {
   # LT represents the death rates by age and sex per 1,000 population. 
   # Divide values in LT by 1000 to get yearly transition probabilities. 
-  LT <- LT/100
+  LT <- LT/1000
   # Modify row names of LT to be lower-bound of specified age range. 
   dimnames(LT)$Age <- sub(pattern = "\\+|-\\d{2}", 
                           replacement = "", x = dimnames(LT)$Age)
