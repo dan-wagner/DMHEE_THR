@@ -66,7 +66,7 @@ TODO: Provide an explanation for how the project is organized here.
 ## :warning: Develop THR Model
 
 * :warning: Prepare Parameter Inputs from raw data. 
-  - :warning: Transition Probabilities
+  - :white_check_mark: Transition Probabilities
     - :white_check_mark: Add raw data to `data/data-raw`. 
     - :white_check_mark: `getParams()` function to prepare parameter input list.
     - :white_check_mark: Generate Parameters from raw data. 
@@ -83,7 +83,7 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Time-Dependent Model Parameters. `calc_TimeDeps()`
       - :white_check_mark: Age specific Mortality Risk `calc_MR`. 
       - :white_check_mark: Revision Risk as a function of Age, Sex, Time. `calc_RR()`. 
-  - :warning: Function to track the cohort through the model. `track_cohort()`. 
+  - :white_check_mark: Function to track the cohort through the model. `track_cohort()`. 
   - :x: Function to estimate Costs
   - :x: Function to estimate utilities. 
 
