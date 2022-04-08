@@ -15,6 +15,7 @@ getParams <- function(File = "THR-Params.rds") {
     usethis::ui_info("Model Parameters have not been generated!")
     usethis::ui_info("Preparing list from raw data")
     
+    # TRANSITION PROBABILITIES -----------------------------
     # Life Tables: Age & Gender Stratified Risk of Death
     LT <- readr::read_rds(file.path("data", 
                                     "data-raw", 
@@ -31,6 +32,15 @@ getParams <- function(File = "THR-Params.rds") {
     
     # Re-Revision Risk
     RRR <- 0.04
+    
+    # COSTING -----------------------------------------------
+    # Cost of Alternative Protheses
+    Cost_j <- c(STD = 394, NP1 = 579)
+    # Health State Costs
+    Cost_states <- readr::read_rds(file = file.path("data", 
+                                                    "data-raw", 
+                                                    "THR_Costs_States.rds"))
+    # UTILITIES ---------------------------------------------
     
     # Combine into List: 
     THR_Params <- 

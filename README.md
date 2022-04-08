@@ -70,8 +70,9 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Add raw data to `data/data-raw`. 
     - :white_check_mark: `getParams()` function to prepare parameter input list.
     - :white_check_mark: Generate Parameters from raw data. 
-  - :x: Costs
-    - :x: Add raw data sets to `data/data-raw`. 
+  - :warning: Costs
+    - :white_check_mark: Add state costs to `data/data-raw`. 
+    - :white_check_mark: Add costs for each prosthesis (`STD`, `NP1`).
     - :x: Update `getParams()` to add new costing parameters. 
   - :x: Utilities
     - :x: Add raw data sets to `data/data-raw`. 
@@ -84,7 +85,7 @@ TODO: Provide an explanation for how the project is organized here.
       - :white_check_mark: Age specific Mortality Risk `calc_MR`. 
       - :white_check_mark: Revision Risk as a function of Age, Sex, Time. `calc_RR()`. 
   - :white_check_mark: Function to track the cohort through the model. `track_cohort()`. 
-  - :x: Function to estimate Costs
+  - :warning: Function to estimate Costs: `cohort_costs()`. 
   - :x: Function to estimate utilities. 
 
 ## :x: Perform Simulations
