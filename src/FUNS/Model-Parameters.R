@@ -41,6 +41,9 @@ getParams <- function(File = "THR-Params.rds") {
                                                     "data-raw", 
                                                     "THR_Costs_States.rds"))
     # UTILITIES ---------------------------------------------
+    Utilities <- readr::read_rds(file = file.path("data", 
+                                                  "data-raw", 
+                                                  "THR-Utilities.rds"))
     
     # Combine into List: 
     THR_Params <- 
@@ -49,7 +52,8 @@ getParams <- function(File = "THR-Params.rds") {
            LifeTables = LT, 
            Survival = SurvFit, 
            Cost_j = Cost_j, 
-           Cost_States = Cost_states)
+           Cost_States = Cost_states, 
+           Utilities = Utilities)
     
     ## write to data-gen/Model-Params
     Param.Path <- file.path(Params.Dir, File)

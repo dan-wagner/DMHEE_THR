@@ -86,7 +86,13 @@ calc_TimeDeps <- function(ParamList,
                       nCycles = nCycles)
   
   # Arrange List, drop un-necessary list-elements: LifeTables
-  ParamList <- ParamList[c("OMR", "RRR", "MR", "RevisionRisk", "Cost_j", "Cost_States")]
+  ParamList <- ParamList[c("OMR", 
+                           "RRR", 
+                           "MR", 
+                           "RevisionRisk", 
+                           "Cost_j", 
+                           "Cost_States", 
+                           "Utilities")]
   
   
   return(ParamList)

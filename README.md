@@ -97,9 +97,9 @@ TODO: Provide an explanation for how the project is organized here.
     with costing parameters. 
   - :warning: Utilities
     - :white_check_mark: Add raw data sets to `data/data-raw`. 
-    - :x: Update `getParams()` to add new utility parameters. 
-    - :x: Re-generate `data/data-gen/Model-Params/THR-Params.rds` with utility 
-    parameters. 
+    - :white_check_mark: Update `getParams()` to add new utility parameters. 
+    - :white_check_mark: Re-generate `data/data-gen/Model-Params/THR-Params.rds` 
+    with utility parameters. 
 
 * :warning: Develop Model Code | `runModel()`. 
   - :white_check_mark: Function to define the transition Matrix. `define_tmat()`. 
