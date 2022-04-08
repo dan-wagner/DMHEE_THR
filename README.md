@@ -59,6 +59,14 @@ Adjusted Life Years.
     cost of a primary THR was set to 0 since all patients will travel through 
     this health state. The original review found that the cost of a revision 
     THR was 5294 GBP (SE 1487). 
+* Utilities
+  - According to the Briggs textbook, a study was initiated to identify the 
+  utility weights subjects placed on different outcomes of THR. These outcomes 
+  were directly related to the Markov States of the THR model. The respective 
+  mean (SD) utilities were specified as: 
+    - Successful Primary THR (`PRI_Success`): 0.85 (0.03)
+    - Successful Revision THR (`REV_Success`): 0.75 (0.04)
+    - Revision THR (`REV_THR`): 0.30 (0.03)
 
 
 2. Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. Modelling 
@@ -87,8 +95,8 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Update `getParams()` to add new costing parameters. 
     - :white_check_mark: Re-generate `data/data-gen/Model-Params/THR-Params.rds` 
     with costing parameters. 
-  - :x: Utilities
-    - :x: Add raw data sets to `data/data-raw`. 
+  - :warning: Utilities
+    - :white_check_mark: Add raw data sets to `data/data-raw`. 
     - :x: Update `getParams()` to add new utility parameters. 
     - :x: Re-generate `data/data-gen/Model-Params/THR-Params.rds` with utility 
     parameters. 
