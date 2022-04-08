@@ -1,3 +1,4 @@
+# 1) Define Transition Matrix (Q) ##############################################
 define_tmat <- function(ParamList, 
                         j, 
                         nCycles = 60, 
@@ -36,4 +37,28 @@ define_tmat <- function(ParamList,
   Q["Death", "Death", ] <- 1
   
   return(Q)
+}
+
+# 2) Track Cohort (trace) ######################################################
+track_cohort <- function(Q, 
+                         nCycles = 60, 
+                         nStart = 1000) {
+  # Construct Blank Cohort Trace 
+  trace <- array(data = 0, 
+                 dim = c(length(1:nCycles), length(colnames(Q))), 
+                 dimnames = list(Cycle = NULL, 
+                                 State = colnames(Q)))
+  # Populate Cohort Trace
+  for (i in seq_along(1:nCycles)) {
+    if (i == 1) {
+      Cohort0 <- c(nStart, rep(0, 4))
+      names(Cohort0) <- colnames(Q)
+      
+      trace[i, ] <- Cohort0 %*% Q[,,i]
+    } else {
+      trace[i, ] <- trace[i-1, ] %*% Q[,,i]
+    }
+  }
+  
+  return(trace)
 }
