@@ -70,12 +70,7 @@ cost_cohort <- function(trace,
                         cDR = 0.06,
                         nStart = 1000) {
   # Cost at Cycle = 0, all patients in PRI_THR
-  Cohort0 <- c(nStart, rep(0, ncol(trace)-1))
-  names(Cohort0) <- colnames(trace)
-  Cost0 <- Cost_States
-  Cost0["PRI_THR"] <- Cost0["PRI_THR"] + Cost_j
-  Cost0 <- Cohort0[-5] * Cost0
-  Cost0 <- sum(Cost0)
+  Cost0 <- (Cost_j + Cost_States[["PRI_THR"]])*nStart
   
   # Estimate Costs for each Cycle and Health State
   StateCosts <- 
@@ -99,7 +94,8 @@ cost_cohort <- function(trace,
 
 # Estimate Effects #############################################################
 effects_cohort <- function(trace, 
-                           State_Util) {
+                           State_Util, 
+                           oDR = 0.015) {
   # Estimate Life Years
   LYs <- rowSums(x = trace[, !colnames(trace) %in% "Death"], 
                  na.rm = FALSE, 
@@ -112,7 +108,9 @@ effects_cohort <- function(trace,
   Utilities <- rowSums(x = Utilities, na.rm = FALSE, dims = 1)
   
   # Combine Results
-  Result <- cbind(LYs = LYs, QALYs = Utilities)
+  Effects <- cbind(LYs = LYs, QALYs = Utilities)
+  ## Discount Effects
+  Effects <- Effects/((1+oDR)^(1:nrow(trace)))
   
-  return(Result)
+  return(Effects)
 }
