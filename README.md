@@ -91,7 +91,9 @@ TODO: Provide an explanation for how the project is organized here.
   - :white_check_mark: Function to track the cohort through the model. `track_cohort()`. 
   - :white_check_mark: Function to estimate Costs: `cohort_costs()`. 
       - :white_check_mark: Add discounting to `cohort_costs()` function. 
-  - :x: Function to estimate utilities. 
+  - :x: Function to estimate effects. `cohort_effects()`. Will return effects 
+  measured in terms of Life Years (`LYs`) and QALYs (`QALY`). 
+    - :x: Add discounting to `cohort_effects()` function. 
 
 ## :x: Perform Simulations
 
