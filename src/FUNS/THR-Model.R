@@ -114,3 +114,50 @@ effects_cohort <- function(trace,
   
   return(Effects)
 }
+
+# RUN Whole Model: Returns Costs & Effects for one arm #########################
+runModel <- function(ParamList,
+                     j, 
+                     Age0 = 60, 
+                     Gender = "Female",
+                     nCycles = 60, 
+                     cDR = 0.06, 
+                     oDR = 0.015) {
+  j <- match.arg(arg = j, choices = c("STD", "NP1"))
+  Gender <- match.arg(arg = Gender, choices = c("Male", "Female"))
+  
+  # Modify Parameters: Time-Dependencies 
+  ParamList <- calc_TimeDeps(ParamList = ParamList, 
+                             Age0 = Age0, 
+                             nCycles = nCycles)
+  
+  # Build Transition Matrix (Q)
+  Q <- define_tmat(ParamList = ParamList, 
+                   j = j, 
+                   Gender = Gender, 
+                   nCycles = nCycles)
+  
+  # Track Cohort (trace)
+  trace <- track_cohort(Q = Q, nCycles = nCycles, nStart = 1000)
+  
+  # Estimate Costs (Costs)
+  Costs <- cost_cohort(trace = trace, 
+                       Cost_j = ParamList$Cost_j[[j]], 
+                       Cost_States = ParamList$Cost_States[,"Mean"], 
+                       cDR = cDR,
+                       nStart = 1000)
+  
+  # Estimate Effects (Effects: LYs/QALYs) 
+  Effects <- effects_cohort(trace = trace, 
+                            State_Util = ParamList$Utilities[,"Mean"], 
+                            oDR = oDR)
+  
+  # Assemble Results
+  ## Calculate Total Per-Patient Costs & Effects
+  Costs <- sum(Costs)/1000
+  Effects <- colSums(x = Effects, na.rm = FALSE, dims = 1)/1000
+  ## Combine Results
+  Result <- c(Costs = Costs, Effects)
+  
+  return(Result)
+}

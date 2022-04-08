@@ -95,13 +95,13 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Update `getParams()` to add new costing parameters. 
     - :white_check_mark: Re-generate `data/data-gen/Model-Params/THR-Params.rds` 
     with costing parameters. 
-  - :warning: Utilities
+  - :white_check_mark: Utilities
     - :white_check_mark: Add raw data sets to `data/data-raw`. 
     - :white_check_mark: Update `getParams()` to add new utility parameters. 
     - :white_check_mark: Re-generate `data/data-gen/Model-Params/THR-Params.rds` 
     with utility parameters. 
 
-* :warning: Develop Model Code | `runModel()`. 
+* :white_check_mark: Develop Model Code | `runModel()`. 
   - :white_check_mark: Function to define the transition Matrix. `define_tmat()`. 
     - :white_check_mark: Time-Independent Model Parameters
     - :white_check_mark: Time-Dependent Model Parameters. `calc_TimeDeps()`
@@ -113,6 +113,8 @@ TODO: Provide an explanation for how the project is organized here.
   - :white_check_mark: Function to estimate effects. `cohort_effects()`. Will return effects 
   measured in terms of Life Years (`LYs`) and QALYs (`QALY`). 
     - :white_check_mark: Add discounting to `cohort_effects()` function. 
+  - :white_check_mark: Bundle Model Code into Single Function: `runModel()`. 
+    - Returns costs and effects for a single prosthesis. 
 
 ## :x: Perform Simulations
 
