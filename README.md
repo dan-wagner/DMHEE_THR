@@ -89,7 +89,7 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Add raw data to `data/data-raw`. 
     - :white_check_mark: `getParams()` function to prepare parameter input list.
     - :white_check_mark: Generate Parameters from raw data. 
-  - :warning: Costs
+  - :white_check_mark: Costs
     - :white_check_mark: Add state costs to `data/data-raw`. 
     - :white_check_mark: Add costs for each prosthesis (`STD`, `NP1`).
     - :white_check_mark: Update `getParams()` to add new costing parameters. 
@@ -115,6 +115,12 @@ TODO: Provide an explanation for how the project is organized here.
     - :white_check_mark: Add discounting to `cohort_effects()` function. 
   - :white_check_mark: Bundle Model Code into Single Function: `runModel()`. 
     - Returns costs and effects for a single prosthesis. 
+    
+* :warning: Add Probabilistic Capability. 
+  - :warning: Add new function (`DrawParams()`) to draw values at random based 
+  on assigned distribution. 
+    - Include capability to switch to deterministic. 
+  - :x: Update Dependencies. List changes in sub-list below. 
 
 ## :x: Perform Simulations
 
