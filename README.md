@@ -116,11 +116,11 @@ TODO: Provide an explanation for how the project is organized here.
   - :white_check_mark: Bundle Model Code into Single Function: `runModel()`. 
     - Returns costs and effects for a single prosthesis. 
     
-* :warning: Add Probabilistic Capability. 
-  - :warning: Add new function (`DrawParams()`) to draw values at random based 
+* :white_check_mark: Add Probabilistic Capability. 
+  - :white_check_mark: Add new function (`DrawParams()`) to draw values at random based 
   on assigned distribution. 
     - Include capability to switch to deterministic. 
-  - :x: Update Dependencies. List changes in sub-list below. 
+  - :white_check_mark: Update Dependencies. 
 
 ## :x: Perform Simulations
 

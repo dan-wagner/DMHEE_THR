@@ -143,13 +143,13 @@ runModel <- function(ParamList,
   # Estimate Costs (Costs)
   Costs <- cost_cohort(trace = trace, 
                        Cost_j = ParamList$Cost_j[[j]], 
-                       Cost_States = ParamList$Cost_States[,"Mean"], 
+                       Cost_States = ParamList$Cost_States, 
                        cDR = cDR,
                        nStart = 1000)
   
   # Estimate Effects (Effects: LYs/QALYs) 
   Effects <- effects_cohort(trace = trace, 
-                            State_Util = ParamList$Utilities[,"Mean"], 
+                            State_Util = ParamList$Utilities, 
                             oDR = oDR)
   
   # Assemble Results

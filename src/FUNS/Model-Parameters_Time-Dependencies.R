@@ -29,8 +29,8 @@ calc_RevisionRisk <- function(Survival,
   #   Event: Prosthesis Failure. 
   #   Coefficients are on the log-scale, so hazard rate can be obtained by 
   #   exponentiating the coefficients. 
-  Survival <- cbind(coef = Survival[,"coef"], 
-                    HR = exp(Survival[,"coef"]))
+  Survival <- cbind(coef = Survival, 
+                    HR = exp(Survival))
   # Estimate Baseline Hazard: 
   ## calculate lambda and gamma from Weibull distribution. 
   ##    - lambda: The log of the lambda parameter is a linear sum of the 
@@ -85,7 +85,7 @@ calc_TimeDeps <- function(ParamList,
   
   # Revision Risk stratified by Age and Gender
   ParamList$RevisionRisk <- 
-    calc_RevisionRisk(Survival = ParamList$Survival$Survival, 
+    calc_RevisionRisk(Survival = ParamList$Survival, 
                       Age0 = Age0, 
                       nCycles = nCycles)
   
