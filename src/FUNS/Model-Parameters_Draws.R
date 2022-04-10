@@ -49,11 +49,20 @@ DrawParams <- function(ParamList, prob = 0) {
   ##    use the function for the required distribution from the MASS package. 
   ##  - This will be a faster implementation.
   if (prob == 1) {
+    # Check Alternatives (informs tolerance levels)
+    ## Lowest tolerance I could find for 2 or 3 alternatives.  
+    tol.levels <- c(j_2 = 0.013, j_3 = 0.0068)
+    ## Use index position to determine which value of tol.levels to supply as 
+    ## tolerance value to MASS::mvrnorm(). 
+    tol.index <- length(grep(pattern = "NP", 
+                      x = rownames(ParamList$Survival$Survival), 
+                      value = TRUE))
+    
     ParamList$Survival <- 
       MASS::mvrnorm(n = 1, 
                     mu = ParamList$Survival$Survival[,"coef"], 
                     Sigma = ParamList$Survival$CovMat, 
-                    tol = 0.013) # Lowest tolerance I could find.
+                    tol = tol.levels[tol.index]) # Lowest tolerance I could find.
   } else {
     ParamList$Survival <- ParamList$Survival$Survival[,"coef"]
   }

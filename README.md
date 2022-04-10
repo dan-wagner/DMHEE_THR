@@ -122,11 +122,11 @@ TODO: Provide an explanation for how the project is organized here.
     - Include capability to switch to deterministic. 
   - :white_check_mark: Update Dependencies. 
 
-* :warning: Add third prosthesis. 
+* :white_check_mark: Add third prosthesis. 
   - :white_check_mark: Update Raw Data: 
     - `THR-Survival.rds` Add values for `NP2` to survival coefficients and the 
     covariance matrix. 
-  - :warning: Modify dependencies for new values: 
+  - :white_check_mark: Modify dependencies for new values: 
     - :white_check_mark: `getParams()`. Add switch to include NP2 or not (`TRUE`/`FALSE`). 
       - :white_check_mark: Add NP2 prosthesis cost. 
     - :white_check_mark: Re-Load Parameter sets from raw data. 
@@ -135,7 +135,7 @@ TODO: Provide an explanation for how the project is organized here.
       - Note: technically I could have just overwritten the original parameter 
       set data to add NP2 and could consider two or three alternatives anyhow. 
       In a production context, that is probably how I would go about doing it. 
-    - :x: `DrawParams()`. Change tolerance level for Multivariate normal draw. 
+    - :white_check_mark: `DrawParams()`. Change tolerance level for Multivariate normal draw. 
 
 ## :x: Perform Simulations
 
