@@ -117,10 +117,25 @@ TODO: Provide an explanation for how the project is organized here.
     - Returns costs and effects for a single prosthesis. 
     
 * :white_check_mark: Add Probabilistic Capability. 
-  - :white_check_mark: Add new function (`DrawParams()`) to draw values at random based 
-  on assigned distribution. 
+  - :white_check_mark: Add new function (`DrawParams()`) to draw values at 
+  random based on assigned distribution. 
     - Include capability to switch to deterministic. 
   - :white_check_mark: Update Dependencies. 
+
+* :warning: Add third prosthesis. 
+  - :warning: Add NP2 Prosthesis cost (). 
+  - :warning: Update Raw Data: 
+    - `THR-Survival.rds` Add values for `NP2` to survival coefficients and the 
+    covariance matrix. 
+  - Modify dependencies for new values: 
+    - :x: `getParams()`. Add switch to include NP2 or not (`TRUE`/`FALSE`). 
+    - :x: Re-Load Parameter sets from raw data. 
+      - :x: Two Alternatives. 
+      - :x: Three Alternatives. 
+      - Note: technically I could have just overwritten the original parameter 
+      set data to add NP2 and could consider two or three alternatives anyhow. 
+      In a production context, that is probably how I would go about doing it. 
+    - :x: `DrawParams()`. Change tolerance level for Multivariate normal draw. 
 
 ## :x: Perform Simulations
 
