@@ -137,6 +137,49 @@ TODO: Provide an explanation for how the project is organized here.
       In a production context, that is probably how I would go about doing it. 
     - :white_check_mark: `DrawParams()`. Change tolerance level for Multivariate normal draw. 
 
+## :x: Simulations and Analysis
+For the purposes of illustration, the model was evaluated using deterministic 
+and probabilistic methods. In each approach, the model considered a time 
+horizon of 60 years (60 cycles). In addition, costs and effects were discounted 
+at 6% and 1.5%, respectively. 
+
+The base case analysis was restricted to Females with a baseline age of 60. 
+Scenario analyses were also performed for Females with baselines ages of 40 & 
+80, and Males with baseline ages of 40, 60, & 80. Monte Carlo simulations were 
+performed for each scenario configuration at 5,000 iterations. 
+
+Consistent with the textbook structure, this repo considers two distinct 
+decision problems: 
+  1. Standard Prosthesis vs. New Prosthesis 1: 
+  `STD-NP1`. 
+  2. Stdandard Prosthesis vs. New Prosthesis 1 vs. New Prosthesis 2: 
+  `STD-NP1-NP2`.
+This will require additional sub-directories to keep simulation output and 
+results separate from one another. 
+
+
+### :x: Simulations
+Data generated from each simulation are saved as follows: 
+  - `data/data-gen/Simulation-Output/[Decision-Problem]/[SimType]_[Gender]-[Age].rds`
+  - `Decision-Problem`: `STD-NP1` or `STD-NP1-NP2`. 
+  - `SimType`: Monte Carlo Simulation or Nested MC Simulation. 
+  - `Gender`: Male/Female
+  - `Age`: Placeholder for the Age value considered. 
+  
+
+
+| Scenario        | MC Simulation | Nested MC Simulation | 
+| --------------- |:-------------:|:--------------------:|
+| Female, 60 (BC) | :x:           | :x:                  |
+| Female, 40      | :x:           | :x:                  |
+| Female, 80      | :x:           | :x:                  | 
+| Male, 40        | :x:           | :x:                  |
+| Male, 60        | :x:           | :x:                  |
+| Male, 80        | :x:           | :x:                  |
+  : Comparing two alternative interventions (`STD-NP1`)
+
+### :x: Analyses and Presentation of Results.
+
 ## :x: Perform Simulations
 
 ### :x: Adoption Decision
