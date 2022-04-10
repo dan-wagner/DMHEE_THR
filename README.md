@@ -181,14 +181,14 @@ following directories:
 
 **Comparing three alternative interventions: `STD-NP1-NP2`**
 
-| Scenario        | MC Simulation       | Nested MC Simulation | 
-| --------------- |:-------------------:|:--------------------:|
-| Female, 60 (BC) | :warning:           | :x:                  |
-| Female, 40      | :warning:           | :x:                  |
-| Female, 80      | :warning:           | :x:                  | 
-| Male, 40        | :warning:           | :x:                  |
-| Male, 60        | :warning:           | :x:                  |
-| Male, 80        | :warning:           | :x:                  |
+| Scenario        | MC Simulation                | Nested MC Simulation | 
+| --------------- |:----------------------------:|:--------------------:|
+| Female, 60 (BC) | :white_check_mark:           | :x:                  |
+| Female, 40      | :white_check_mark:           | :x:                  |
+| Female, 80      | :white_check_mark:           | :x:                  | 
+| Male, 40        | :white_check_mark:           | :x:                  |
+| Male, 60        | :white_check_mark:           | :x:                  |
+| Male, 80        | :white_check_mark:           | :x:                  |
 
 ### :x: Analyses and Presentation of Results.
 See `DOCUMENT-X` for complete model results for decision problem `STD-NP1`. 
