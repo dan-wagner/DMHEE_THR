@@ -158,7 +158,7 @@ This will require additional sub-directories to keep simulation output and
 results separate from one another. 
 
 
-### :x: Simulations
+### :warning: Simulations
 For each decision problem, a total of 6 different model configurations must be 
 evaluated. Females age 40, 60 (Base Case), and 80 as well as Males at the same 
 ages. Data generated from the simulations listed below are stored in the 
@@ -181,14 +181,14 @@ following directories:
 
 **Comparing three alternative interventions: `STD-NP1-NP2`**
 
-| Scenario        | MC Simulation | Nested MC Simulation | 
-| --------------- |:-------------:|:--------------------:|
-| Female, 60 (BC) | :x:           | :x:                  |
-| Female, 40      | :x:           | :x:                  |
-| Female, 80      | :x:           | :x:                  | 
-| Male, 40        | :x:           | :x:                  |
-| Male, 60        | :x:           | :x:                  |
-| Male, 80        | :x:           | :x:                  |
+| Scenario        | MC Simulation       | Nested MC Simulation | 
+| --------------- |:-------------------:|:--------------------:|
+| Female, 60 (BC) | :warning:           | :x:                  |
+| Female, 40      | :warning:           | :x:                  |
+| Female, 80      | :warning:           | :x:                  | 
+| Male, 40        | :warning:           | :x:                  |
+| Male, 60        | :warning:           | :x:                  |
+| Male, 80        | :warning:           | :x:                  |
 
 ### :x: Analyses and Presentation of Results.
 See `DOCUMENT-X` for complete model results for decision problem `STD-NP1`. 
