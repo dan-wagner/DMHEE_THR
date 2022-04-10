@@ -123,12 +123,12 @@ TODO: Provide an explanation for how the project is organized here.
   - :white_check_mark: Update Dependencies. 
 
 * :warning: Add third prosthesis. 
-  - :warning: Add NP2 Prosthesis cost (). 
-  - :warning: Update Raw Data: 
+  - :white_check_mark: Update Raw Data: 
     - `THR-Survival.rds` Add values for `NP2` to survival coefficients and the 
     covariance matrix. 
   - Modify dependencies for new values: 
     - :x: `getParams()`. Add switch to include NP2 or not (`TRUE`/`FALSE`). 
+      - :x: Add NP2 prosthesis cost. 
     - :x: Re-Load Parameter sets from raw data. 
       - :x: Two Alternatives. 
       - :x: Three Alternatives. 
