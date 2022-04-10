@@ -159,24 +159,25 @@ results separate from one another.
 
 
 ### :x: Simulations
-Data generated from each simulation are saved as follows: 
-  - `data/data-gen/Simulation-Output/[Decision-Problem]/[SimType]_[Gender]-[Age].rds`
-  - `Decision-Problem`: `STD-NP1` or `STD-NP1-NP2`. 
-  - `SimType`: Monte Carlo Simulation or Nested MC Simulation. 
-  - `Gender`: Male/Female
-  - `Age`: Placeholder for the Age value considered. 
+For each decision problem, a total of 6 different model configurations must be 
+evaluated. Females age 40, 60 (Base Case), and 80 as well as Males at the same 
+ages. Data generated from the simulations listed below are stored in the 
+following directories: 
+
+  * 2 Alternatives: `data/data-gen/Simulation-Output/01_STD-v-NP1`. 
+  * 3 Alternatives: `data/data-gen/Simulation-Output/02_STD-v-NP1-NP2`. 
   
 
 **Comparing two alternative interventions: `STD-NP1`**
 
-| Scenario        | MC Simulation | Nested MC Simulation | 
-| --------------- |:-------------:|:--------------------:|
-| Female, 60 (BC) | :x:           | :x:                  |
-| Female, 40      | :x:           | :x:                  |
-| Female, 80      | :x:           | :x:                  | 
-| Male, 40        | :x:           | :x:                  |
-| Male, 60        | :x:           | :x:                  |
-| Male, 80        | :x:           | :x:                  |
+| Scenario        | MC Simulation                | Nested MC Simulation | 
+| --------------- |:----------------------------:|:--------------------:|
+| Female, 60 (BC) | :white_check_mark:           | :x:                  |
+| Female, 40      | :white_check_mark:           | :x:                  |
+| Female, 80      | :white_check_mark:           | :x:                  | 
+| Male, 40        | :white_check_mark:           | :x:                  |
+| Male, 60        | :white_check_mark:           | :x:                  |
+| Male, 80        | :white_check_mark:           | :x:                  |
 
 **Comparing three alternative interventions: `STD-NP1-NP2`**
 
