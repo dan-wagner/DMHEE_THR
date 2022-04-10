@@ -82,7 +82,7 @@ TODO: Provide an explanation for how the project is organized here.
 :warning: In-Progress
 :x: Ice-Box.
 
-## :warning: Develop THR Model
+## :white_check_mark: Develop THR Model
 
 * :white_check_mark: Prepare Parameter Inputs from raw data. 
   - :white_check_mark: Transition Probabilities
@@ -137,7 +137,7 @@ TODO: Provide an explanation for how the project is organized here.
       In a production context, that is probably how I would go about doing it. 
     - :white_check_mark: `DrawParams()`. Change tolerance level for Multivariate normal draw. 
 
-## :x: Simulations and Analysis
+## :warning: Simulations and Analysis
 For the purposes of illustration, the model was evaluated using deterministic 
 and probabilistic methods. In each approach, the model considered a time 
 horizon of 60 years (60 cycles). In addition, costs and effects were discounted 
