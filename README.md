@@ -167,6 +167,7 @@ Data generated from each simulation are saved as follows:
   - `Age`: Placeholder for the Age value considered. 
   
 
+**Comparing two alternative interventions: `STD-NP1`**
 
 | Scenario        | MC Simulation | Nested MC Simulation | 
 | --------------- |:-------------:|:--------------------:|
@@ -176,7 +177,17 @@ Data generated from each simulation are saved as follows:
 | Male, 40        | :x:           | :x:                  |
 | Male, 60        | :x:           | :x:                  |
 | Male, 80        | :x:           | :x:                  |
-  : Comparing two alternative interventions (`STD-NP1`)
+
+**Comparing three alternative interventions: `STD-NP1-NP2`**
+
+| Scenario        | MC Simulation | Nested MC Simulation | 
+| --------------- |:-------------:|:--------------------:|
+| Female, 60 (BC) | :x:           | :x:                  |
+| Female, 40      | :x:           | :x:                  |
+| Female, 80      | :x:           | :x:                  | 
+| Male, 40        | :x:           | :x:                  |
+| Male, 60        | :x:           | :x:                  |
+| Male, 80        | :x:           | :x:                  |
 
 ### :x: Analyses and Presentation of Results.
 
