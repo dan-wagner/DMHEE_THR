@@ -129,9 +129,9 @@ TODO: Provide an explanation for how the project is organized here.
   - :warning: Modify dependencies for new values: 
     - :white_check_mark: `getParams()`. Add switch to include NP2 or not (`TRUE`/`FALSE`). 
       - :white_check_mark: Add NP2 prosthesis cost. 
-    - :x: Re-Load Parameter sets from raw data. 
-      - :x: Two Alternatives. 
-      - :x: Three Alternatives. 
+    - :white_check_mark: Re-Load Parameter sets from raw data. 
+      - :white_check_mark: Two Alternatives. 
+      - :white_check_mark: Three Alternatives. 
       - Note: technically I could have just overwritten the original parameter 
       set data to add NP2 and could consider two or three alternatives anyhow. 
       In a production context, that is probably how I would go about doing it. 
