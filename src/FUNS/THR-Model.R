@@ -123,7 +123,7 @@ runModel <- function(ParamList,
                      nCycles = 60, 
                      cDR = 0.06, 
                      oDR = 0.015) {
-  j <- match.arg(arg = j, choices = c("STD", "NP1"))
+  j <- match.arg(arg = j, choices = c("STD", "NP1", "NP2"))
   Gender <- match.arg(arg = Gender, choices = c("Male", "Female"))
   
   # Modify Parameters: Time-Dependencies 
