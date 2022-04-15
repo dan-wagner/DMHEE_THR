@@ -215,3 +215,12 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
     - :x: Calculate EVPI (per patient and population). 
     - :x: Calculate EVPPI (per patient and population). 
     - :x: Plot EVPI and EVPPI as a function fo cost-effectiveness threshold. 
+
+# Notes
+
+  * :information_source: Add Function to return Display Table for  
+  Cost-Effectiveness Results. 
+    - There is a considerable amount of code duplication. 
+    - Requirements: 
+      - Deterministic vs probabilistic output. 
+      - Scenarios as row groups. 
