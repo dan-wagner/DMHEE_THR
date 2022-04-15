@@ -198,20 +198,16 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 
 | Task                       | `STD` vs `NP1` | `STD` vs `NP1` vs `NP2` | 
 |----------------------------|:--------------:|:-----------------------:|
-| Deterministic, Table: Incremental Analysis | :x:  | :x: | 
-| Probabilistic Results      | :x:            | :x:                     | 
-|   Table: CEA Results       | :x:            | :x:                     | 
-|   Plot Cost-Effectiveness Plane | :x:       | :x:                     | 
-|   Plot CEAC                | :x:            | :x:                     | 
-
-
-  * :x: Deterministic: Calculate ICER. 
-  * :x: Analysis and Presentation of Probabilistic Results. 
-    - :x: Perform Incremental Analysis
-    - :x: Net-Benefits Analysis. 
-    - :x: Prepare CEA Results Table. 
-    - :x: Plot Cost-Effectiveness Plane. 
-    - :x: Plot CEAC. 
+| *DETERMINISTIC RESULTS*    | :x:            | :x:                     | 
+| :arrow_right: Display Table: Incremental Analysis- Base Case | :x: | :x: | 
+| :arrow_right: Display Table: Incremental Analysis- All Scenarios | :x: | :x: | 
+| *PROBABILISTIC RESULTS*    | :x:            | :x:                     | 
+| :arrow_right: Display Table: CEA Results - Base Case | :x: | :x:      | 
+| :arrow_right: Display Table: CEA Results - All Scenarios :x: | :x:    | 
+| :arrow_right: Plot: CE Plane - Base Case  | :x: | :x: | 
+| :arrow_right: Plot: CE Plane - All Scenarios | :x: | :x: | 
+| :arrow_right: Plot CEAC - Base Case | :x: | :x: | 
+| :arrow_right: Plot CEAC - All Scenarios | :x: | :x: | 
 
 #### :x: Research Decision
 
