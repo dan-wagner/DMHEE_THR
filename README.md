@@ -196,6 +196,15 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 
 #### :x: Adoption Decision
 
+| Task                       | `STD` vs `NP1` | `STD` vs `NP1` vs `NP2` | 
+|----------------------------|:--------------:|:-----------------------:|
+| Deterministic, Table: Incremental Analysis | :x:  | :x: | 
+| Probabilistic Results      | :x:            | :x:                     | 
+|   Table: CEA Results       | :x:            | :x:                     | 
+|   Plot Cost-Effectiveness Plane | :x:       | :x:                     | 
+|   Plot CEAC                | :x:            | :x:                     | 
+
+
   * :x: Deterministic: Calculate ICER. 
   * :x: Analysis and Presentation of Probabilistic Results. 
     - :x: Perform Incremental Analysis
