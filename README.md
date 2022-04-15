@@ -198,12 +198,12 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 
 | Task                       | `STD` vs `NP1` | `STD` vs `NP1` vs `NP2` | 
 |----------------------------|:--------------:|:-----------------------:|
-| *DETERMINISTIC RESULTS*    | :x:            | :x:                     | 
-| :arrow_right: Display Table: Incremental Analysis- Base Case | :x: | :x: | 
-| :arrow_right: Display Table: Incremental Analysis- All Scenarios | :x: | :x: | 
+| *DETERMINISTIC RESULTS*    | :white_check_mark:  | :x:                | 
+| :arrow_right: Display Table: Incremental Analysis- Base Case | :white_check_mark: | :x: | 
+| :arrow_right: Display Table: Incremental Analysis- All Scenarios | :white_check_mark: | :x: | 
 | *PROBABILISTIC RESULTS*    | :x:            | :x:                     | 
 | :arrow_right: Display Table: CEA Results - Base Case | :x: | :x:      | 
-| :arrow_right: Display Table: CEA Results - All Scenarios :x: | :x:    | 
+| :arrow_right: Display Table: CEA Results - All Scenarios | :x: | :x:    | 
 | :arrow_right: Plot: CE Plane - Base Case  | :x: | :x: | 
 | :arrow_right: Plot: CE Plane - All Scenarios | :x: | :x: | 
 | :arrow_right: Plot CEAC - Base Case | :x: | :x: | 
