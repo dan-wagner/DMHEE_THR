@@ -23,7 +23,7 @@ library(HEEToolkit)
 IA.BC <- colMeans(x = THR.2j[,,,"Female", "60"], na.rm = FALSE, dims = 1)
 IA.BC <- t(IA.BC)
 
-IA.BC <- inc_analysis(data = IA.BC, Effect = "QALYs")
+IA.BC <- inc_analysis(data = IA.BC, Effects = "QALYs")
 
 IA.Scenario <- colMeans(x = THR.2j, na.rm = FALSE, dims = 1)
 IA.Scenario <- aperm(a = IA.Scenario, perm = c("j", "Result", "Gender", "Age"))
@@ -34,7 +34,7 @@ IA.Scenario <-
            sapply(X = c(Male = "Male", Female = "Female"), 
                   FUN = \(sex){
                     inc_analysis(data = IA.Scenario[,,sex,age], 
-                                Effect = "QALYs")
+                                Effects = "QALYs")
                     },
                   simplify = "array")
            },

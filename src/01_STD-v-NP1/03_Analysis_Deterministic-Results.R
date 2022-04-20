@@ -14,7 +14,7 @@ THR.2j <- readr::read_rds(file = file.path("data",
 # Incremental Analysis =========================================================
 library(HEEToolkit)
 ## Base Case | Female, Age 60 --------------------------------------------------
-BC.ICER <- inc_analysis(data = THR.2j[,,"Female", "60"], Effect = "QALYs")
+BC.ICER <- inc_analysis(data = THR.2j[,,"Female", "60"], Effects = "QALYs")
 BC.ICER
 ## All Scenarios ---------------------------------------------------------------
 SCENARIO.ICER <- 
@@ -23,7 +23,7 @@ SCENARIO.ICER <-
            sapply(X = c(Male = "Male", Female = "Female"), 
                   FUN = \(sex){
                     inc_analysis(data = THR.2j[,,sex, age], 
-                                 Effect = "QALYs")
+                                 Effects = "QALYs")
                   }, 
                   simplify = "array")
          }, 
