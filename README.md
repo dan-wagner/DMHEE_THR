@@ -206,8 +206,8 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 | :arrow_right: Display Table: CEA Results - All Scenarios | :white_check_mark: | :x:    | 
 | :arrow_right: Plot: CE Plane - Base Case  | :white_check_mark: | :x: | 
 | :arrow_right: Plot: CE Plane - All Scenarios | :white_check_mark: | :x: | 
-| :arrow_right: Plot CEAC - Base Case | :x: | :x: | 
-| :arrow_right: Plot CEAC - All Scenarios | :x: | :x: | 
+| :arrow_right: Plot CEAC - Base Case | :white_check_mark: | :x: | 
+| :arrow_right: Plot CEAC - All Scenarios | :white_check_mark: | :x: | 
 
 #### :x: Research Decision
 
