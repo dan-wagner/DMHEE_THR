@@ -1,19 +1,22 @@
 # DMHEE_THR
-The goal of this repo is to develop and execute the Total Hip Replacement (THR) 
-model from the DMHEE textbook. This exercise was developed in response to the
-observation that the textbook is written and organized for a spreadsheet 
-environment. A different approach is required when using a programming language 
-like R. 
+This repo is a redevelopment of the Total Hip Replacement (THR) model from the 
+DMHEE textbook [^1] following strategies for reproducibility. The relevant 
+methodological sequence was organized into an automated workflow which was 
+designed to capture the procedures of the economic evaluation as well as those 
+used to estimate the parameter inputs. 
 
-Source Text: 
-1. Briggs AH, Claxton K, Sculpher MJ. Decision modelling for health economic
-evaluation. Oxford: Oxford University Press; 2006. 237 p. (Briggs A, Gray A, 
-editors. Oxford handbooks in health economic evaluation). 
+This effort was initiated in response to the fact that the original textbook 
+exercises are designed and organized for a spreadsheet environment. Adapting 
+this project ot a programming language (`R`) offered the ability to show how 
+this model could be developed in a reproducible fashion. A collection of 
+previously identified strategies for reproducibility were used to achieve a 
+level of reproducibility that would allow for the reliable re-generation of 
+results, including intermediate data sets. 
 
 # Model Summary
 Briggs et al. reported on the development of a Markov model which was used to 
 predict the prognosis of patients who have undergone primary total hip 
-replacement (THR) surgery (2). A diagrammatic representation of the model 
+replacement (THR) surgery [^2]. A diagrammatic representation of the model 
 is presented below: 
 
 ![Structure of THR Markov Model](docs/Diagrams/THR-Model.png)
@@ -67,11 +70,6 @@ Adjusted Life Years.
     - Successful Primary THR (`PRI_Success`): 0.85 (0.03)
     - Successful Revision THR (`REV_Success`): 0.75 (0.04)
     - Revision THR (`REV_THR`): 0.30 (0.03)
-
-
-2. Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. Modelling 
-the cost-effectiveness of primary hip replacement: how cost-effective is the 
-Spectron compared to the Charnley prosthesis? 2003 Dec;52. 
 
 
 # Project Organization
@@ -224,3 +222,11 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
     - Requirements: 
       - Deterministic vs probabilistic output. 
       - Scenarios as row groups. 
+      
+
+[^1]: Briggs AH, Claxton K, Sculpher MJ. Decision modelling for health economic
+evaluation. Oxford: Oxford University Press; 2006. 237 p. (Briggs A, Gray A, 
+editors. Oxford handbooks in health economic evaluation). 
+[^2]: Briggs A, Sculpher M, Dawson J, Fitzpatrick R, Murray D, Malchau H. 
+Modelling the cost-effectiveness of primary hip replacement: how cost-effective 
+is the Spectron compared to the Charnley prosthesis? 2003 Dec;52. 
