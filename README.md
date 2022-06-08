@@ -188,11 +188,11 @@ following directories:
 | Male, 60        | :white_check_mark:           | :x:                  |
 | Male, 80        | :white_check_mark:           | :x:                  |
 
-### :x: Analyses and Presentation of Results.
+### :warning: Analyses and Presentation of Results.
 See `DOCUMENT-X` for complete model results for decision problem `STD-NP1`. 
 See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 
-#### :x: Adoption Decision
+#### :white_check_mark: Adoption Decision
 
 | Task                       | `STD` vs `NP1` | `STD` vs `NP1` vs `NP2` | 
 |----------------------------|:--------------:|:-----------------------:|
