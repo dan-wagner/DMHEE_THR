@@ -209,10 +209,17 @@ See `DOCUMENT-Y` for complete model results for decision problem `STD-NP1-NP2`.
 
 #### :x: Research Decision
 
-  * :x: Implement VoI Methods. 
-    - :x: Calculate EVPI (per patient and population). 
-    - :x: Calculate EVPPI (per patient and population). 
-    - :x: Plot EVPI and EVPPI as a function fo cost-effectiveness threshold. 
+| Task | `STD` vs `NP1` | `STD` vs `NP1` vs `NP2` | 
+| ---  | :------------: | ----------------------- | 
+| EVPI | :x:            | :x:                     | 
+| :arrow_right: Calculate EVPI for all subgroups | :x: | :x: | 
+| :arrow_right: Plot Population EVPI | :x: | :x: | 
+| EVPPI | :x:           | :x:                     | 
+| :arrow_right: Phi = "OMR" | :x: | :x: | 
+| :arrow_right: Phi = "RRR" | :x: | :x: | 
+| :arrow_right: Phi = "Survival" | :x: | :x: | 
+| :arrow_right: Phi = "Cost_States" | :x: | :x: | 
+| :arrow_right: Phi = "Utilities" | :x: | :x: | 
 
 # Notes
 
