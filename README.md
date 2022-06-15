@@ -212,14 +212,14 @@ statistic required in a VoI analysis.
 | Male, 80        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
 
 **Comparing two Alternative Interventions: `STD-v-NP1-v-NP2`**
-| Scenario        | NMC $\varphi$ = OMR  | NMC $varphi$ = RRR  | NMC $varphi$ = Survival | NMC $varphi$ = Costs | NMC $varphi$ = Utilities |
-| --------------- |:--------------------:|:-------------------:|:-----------------------:|:--------------------:|:------------------------:|
-| Female, 60 (BC) | :x:   | :x:  | :x:      |:x:    |:x:        |
-| Female, 40      | :x:   | :x:  | :x:      |:x:    |:x:        |
-| Female, 80      | :x:   | :x:  | :x:      |:x:    |:x:        | 
-| Male, 40        | :x:   | :x:  | :x:      |:x:    |:x:        |
-| Male, 60        | :x:   | :x:  | :x:      |:x:    |:x:        |
-| Male, 80        | :x:   | :x:  | :x:      |:x:    |:x:        |
+| Scenario        | \U03c6 = OMR  | \U03c6 = RRR  | \U03c6 = Survival | \U03c6 = Costs | \U03c6 = Utilities |
+| --------------- |:-------------:|:-------------:|:-----------------:|:--------------:|:------------------:|
+| Female, 60 (BC) | :x:           | :x:           | :x:               | :x:            |:x:                 |
+| Female, 40      | :x:           | :x:           | :x:               | :x:            |:x:                 |
+| Female, 80      | :x:           | :x:           | :x:               | :x:            |:x:                 | 
+| Male, 40        | :x:           | :x:           | :x:               | :x:            |:x:                 |
+| Male, 60        | :x:           | :x:           | :x:               | :x:            |:x:                 |
+| Male, 80        | :x:           | :x:           | :x:               | :x:            |:x:                 |
 
 
 
