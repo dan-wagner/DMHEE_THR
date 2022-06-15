@@ -75,6 +75,21 @@ Adjusted Life Years.
 # Project Organization
 TODO: Provide an explanation for how the project is organized here. 
 
+```
+PROJECT-DIRECTORY
+|-data\
+|   |-data-raw\
+|   |-data-gen\
+|     |-Model-Params\
+|     |-Simulation-Output\
+|-docs\
+|-results\
+|-src\
+|   |-FUNS\
+|   |-01_Simulations
+|   |-02_Analysis
+```
+
 # Progress
 :white_check_mark: Complete
 :warning: In-Progress
@@ -164,29 +179,49 @@ following directories:
 
   * 2 Alternatives: `data/data-gen/Simulation-Output/01_STD-v-NP1`. 
   * 3 Alternatives: `data/data-gen/Simulation-Output/02_STD-v-NP1-NP2`. 
-  
 
-**Comparing two alternative interventions: `STD-NP1`**
+### Monte Carlo Simulations
+Monte Carlo simulations are used to inform an adoption decision, via
+incremental analysis or net-benefits, as well as the estimation of the EVPI
+statistic in a Value-of-Information (VoI) analysis. 
 
-| Scenario        | MC Simulation                | Nested MC Simulation | 
-| --------------- |:----------------------------:|:--------------------:|
-| Female, 60 (BC) | :white_check_mark:           | :x:                  |
-| Female, 40      | :white_check_mark:           | :x:                  |
-| Female, 80      | :white_check_mark:           | :x:                  | 
-| Male, 40        | :white_check_mark:           | :x:                  |
-| Male, 60        | :white_check_mark:           | :x:                  |
-| Male, 80        | :white_check_mark:           | :x:                  |
 
-**Comparing three alternative interventions: `STD-NP1-NP2`**
+| Scenario        | MC `STD-v-NP1`      | MC `STD-v-NP1-v-NP2`| 
+| --------------- |:-------------------:|:-------------------:|
+| Female, 60 (BC) | :white_check_mark:  |:white_check_mark:   | 
+| Female, 40      | :white_check_mark:  |:white_check_mark:   | 
+| Female, 80      | :white_check_mark:  |:white_check_mark:   |  
+| Male, 40        | :white_check_mark:  |:white_check_mark:   | 
+| Male, 60        | :white_check_mark:  |:white_check_mark:   | 
+| Male, 80        | :white_check_mark:  |:white_check_mark:   | 
 
-| Scenario        | MC Simulation                | Nested MC Simulation | 
-| --------------- |:----------------------------:|:--------------------:|
-| Female, 60 (BC) | :white_check_mark:           | :x:                  |
-| Female, 40      | :white_check_mark:           | :x:                  |
-| Female, 80      | :white_check_mark:           | :x:                  | 
-| Male, 40        | :white_check_mark:           | :x:                  |
-| Male, 60        | :white_check_mark:           | :x:                  |
-| Male, 80        | :white_check_mark:           | :x:                  |
+### Nested Monte Carlo Simulations
+Nested Monte Carlo simulations are used to generate distributions of costs and 
+effects in order to estimate the EVPI for a specific parameter - the EVPPI 
+statistic required in a VoI analysis. 
+
+**Comparing two Alternative Interventions: `STD-v-NP1`**
+
+| Scenario        | NMC $\varphi$ = OMR  | NMC $varphi$ = RRR  | NMC $varphi$ = Survival | NMC $varphi$ = Costs | NMC $varphi$ = Utilities |
+| --------------- |:--------------------:|:-------------------:|:-----------------------:|:--------------------:|:------------------------:|
+| Female, 60 (BC) | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
+| Female, 40      | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
+| Female, 80      | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        | 
+| Male, 40        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
+| Male, 60        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
+| Male, 80        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
+
+**Comparing two Alternative Interventions: `STD-v-NP1-v-NP2`**
+| Scenario        | NMC $\varphi$ = OMR  | NMC $varphi$ = RRR  | NMC $varphi$ = Survival | NMC $varphi$ = Costs | NMC $varphi$ = Utilities |
+| --------------- |:--------------------:|:-------------------:|:-----------------------:|:--------------------:|:------------------------:|
+| Female, 60 (BC) | :x:   | :x:  | :x:      |:x:    |:x:        |
+| Female, 40      | :x:   | :x:  | :x:      |:x:    |:x:        |
+| Female, 80      | :x:   | :x:  | :x:      |:x:    |:x:        | 
+| Male, 40        | :x:   | :x:  | :x:      |:x:    |:x:        |
+| Male, 60        | :x:   | :x:  | :x:      |:x:    |:x:        |
+| Male, 80        | :x:   | :x:  | :x:      |:x:    |:x:        |
+
+
 
 ### :warning: Analyses and Presentation of Results.
 See `DOCUMENT-X` for complete model results for decision problem `STD-NP1`. 
