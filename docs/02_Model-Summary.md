@@ -1,6 +1,6 @@
 # Model Summary
 
-Originally developed by Briggs et al.[^2], the Total Hip Replacement Model
+Originally developed by Briggs et al.[^1], the Total Hip Replacement Model
 predicts the prognosis of patients who have undergone a primary THR procedure. 
 The model was used to compare the cost-effectiveness of a standard prosthesis 
 against one (`NP1`) or two (`NP1` & `NP2`) new prostheses. This is accomplished 
