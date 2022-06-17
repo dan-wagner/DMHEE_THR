@@ -9,10 +9,21 @@ Status indicators for each task (or sub-task) are defined as:
 :warning: In-Progress
 :x: Ice-Box
 
-# :white_check_mark: Model Development
+| Task                                     | Status             | 
+|-----------------------------------------|:------------------:|
+| [Model Development](#model-development) | :white_check_mark  | 
+| [Monte Carlo Simulations](#monte-carlo-simulations) | :white_check_mark: | 
+| [Nested Monte Carlo Simulations](#nested-monte-carlo-simulations)  | :white_check_mark: |
+| :right_arrow: [`STD-v-NP1`](#decision-problem-1) | :white_check_mark: | 
+| :right_arrow: [`STD-v-NP1-v-NP2`](#decision-problem-2) | :x:                |
+| Analysis: [Adoption Decision](#adoption-decision) | :white_check_mark: | 
+| Analysis: [Research Decision](#research-decision) | :warning:          | 
+
+# Model Development
 Put a summary statement here. 
 
-## :white_check_mark: Prepare Parameter Inputs from Raw Data
+## Prepare Parameter Inputs from Raw Data
+**STATUS:** :white_check_mark:
 
 * Transition Probabilities
   - :white_check_mark: Add health state count data to to `data/data-raw`
@@ -25,7 +36,8 @@ Put a summary statement here.
 * :white_check_mark: Define Function that returns simulation ready model 
 parameters. 
 
-## :white_check_mark: Model Implementation
+## Model Implementation
+**STATUS:** :white_check_mark:
 
 * :white_check_mark: Write function to define the transition matrix. 
   - :white_check_mark: Time-Independent Model Parameters
@@ -43,13 +55,15 @@ parameters.
 a single arm of the decision model. `runModel()`. 
   - Returns costs and effects for a single prosthesis. 
 
-## :white_check_mark: Add Probabilistic Capability
+## Add Probabilistic Capability
+**STATUS:** :white_check_mark:
 
 * :white_check_mark: Add function to draw values at random based on 
 assumed distributions. 
   - Include capability to switch between deterministic and probabilistic output. 
 
-## :white_check_mark: Add Third Prosthesis
+## Add Third Prosthesis
+**STATUS:** :white_check_mark:
 
 * :white_check_mark: Update Raw Data to include values for `NP2`. 
   - :white_check_mark: Update `data/data-raw/THR-Survival.rds`
@@ -67,7 +81,7 @@ assumed distributions.
   - When comparing three alternatives, change the tolerance level for 
   the Multivariate normal draw. 
 
-# :warning: Simulations and Analyses
+# Simulations and Analyses
 
 Consistent with the textbook instructions, this repo considers two distinct 
 decision problems: 
@@ -80,7 +94,7 @@ evaluated. Females and males with a baseline age of 40, 60, or 80 years. As
 with the textbook, the base case was assumed to represent females with a 
 baseline age of 60. 
 
-## :white_check_mark: Monte Carlo Simulations
+## Monte Carlo Simulations
 The output of a Monte Carlo simulation is used to inform the adoption and 
 research decisions. It represents the repeated evaluation of a decision model 
 using parameter values drawn at random from assigned distributions. For an 
@@ -101,7 +115,7 @@ in the `data/data-gen` sub-directory.
 | Male, 60        | :white_check_mark:  |:white_check_mark:    | 
 | Male, 80        | :white_check_mark:  |:white_check_mark:    | 
 
-## :warning: Nested Monte Carlo Simulations
+## Nested Monte Carlo Simulations
 Nested Monte Carlo simulations are used to generate distributions of 
 costs and effects in order to estimate the EVPI for a specific parameter. This 
 *EVPPI* statistic is required in a VoI analysis. 
@@ -109,7 +123,8 @@ costs and effects in order to estimate the EVPI for a specific parameter. This
 Given the time consuming nature of this simulation, output data were preserved 
 in the `data/data-gen` sub-directory. 
 
-### :white_check_mark: NMC Simulations: `STD-v-NP1`
+### Decision Problem 1
+Alternatives Compared: `STD-v-NP1`
 
 | Scenario        | &phi; = OMR  | &phi; = RRR  | &phi; = Survival | &phi; = Costs | &phi; = Utilities |
 | --------------- |:--------------------:|:-------------------:|:-----------------------:|:--------------------:|:------------------------:|
@@ -120,7 +135,8 @@ in the `data/data-gen` sub-directory.
 | Male, 60        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
 | Male, 80        | :white_check_mark:   | :white_check_mark:  | :white_check_mark:      |:white_check_mark:    |:white_check_mark:        |
 
-### :x: NMC Simulations: `STD-v-NP1-v-NP2`
+### Decision Problem 2 
+Alternatives Compared: `STD-v-NP1-v-NP2`
 
 | Scenario        | &phi; = OMR  | &phi; = RRR  | &phi; = Survival | &phi; = Costs | &phi; = Utilities |
 | --------------- |:-------------:|:-------------:|:-----------------:|:--------------:|:------------------:|
