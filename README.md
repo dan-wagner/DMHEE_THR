@@ -92,7 +92,7 @@ PROJECT-DIRECTORY
 
 # Documentation
 
-* [Documentation on Re-Development Progress](docs/01_Progress.md)
+* [Progress](docs/01_Progress.md)
 
 
 # Notes

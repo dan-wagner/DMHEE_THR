@@ -11,11 +11,11 @@ Status indicators for each task (or sub-task) are defined as:
 
 | Task                                     | Status             | 
 |-----------------------------------------|:------------------:|
-| [Model Development](#model-development) | :white_check_mark  | 
+| [Model Development](#model-development) | :white_check_mark:  | 
 | [Monte Carlo Simulations](#monte-carlo-simulations) | :white_check_mark: | 
 | [Nested Monte Carlo Simulations](#nested-monte-carlo-simulations)  | :white_check_mark: |
-| :right_arrow: [`STD-v-NP1`](#decision-problem-1) | :white_check_mark: | 
-| :right_arrow: [`STD-v-NP1-v-NP2`](#decision-problem-2) | :x:                |
+| :arrow_right: [`STD-v-NP1`](#decision-problem-1) | :white_check_mark: | 
+| :arrow_right: [`STD-v-NP1-v-NP2`](#decision-problem-2) | :x:                |
 | Analysis: [Adoption Decision](#adoption-decision) | :white_check_mark: | 
 | Analysis: [Research Decision](#research-decision) | :warning:          | 
 
