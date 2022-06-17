@@ -6,7 +6,7 @@ The model was used to compare the cost-effectiveness of a standard prosthesis
 against one (`NP1`) or two (`NP1` & `NP2`) new prostheses. This is accomplished 
 using a Markov structure, which is presented graphically below. 
 
-![Structure of THR Markov Model](docs/Diagrams/THR-Model.png)
+![Structure of THR Markov Model](Diagrams/THR-Model.png)
 
 The model is designed to track patients through specific Markov states to 
 estimate the costs and benefits of each intervention over a specified time 
