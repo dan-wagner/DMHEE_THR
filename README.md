@@ -38,15 +38,18 @@ PROJECT-DIRECTORY
   : The data directory is used to store both raw (`data-raw`) and generated 
   (`data-gen`) data set. In the latter category, additional sub-directories are 
   used to distinguish between Model Parameters and Simulation Output. 
+  
 `docs`
   : The docs directory is used to store documents relevant to the project. This 
   may include project-specific [documentation](#documentation), diagrams, or 
   even manuscripts and reports. 
+  
 `results`
   : The results directory is used to store results from the project. In this 
   case a result is conceptualized as output which is ready to be placed in a 
   manuscript or report. This may include a formatted display table or different 
   kinds of plots produced for the project. 
+  
 `src`
   : The src is used to store all of the scripts for a project. It is organized 
   into three specific sub-directories. The first sub-directory, `FUNS`, is used 
