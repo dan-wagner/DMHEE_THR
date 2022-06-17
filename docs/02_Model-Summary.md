@@ -78,8 +78,8 @@ Markov State Costs
 The economic evaluation considered one set of utility parameters. 
 
 Utilities
-  : As reported in the textbook where this exercise was sourced[^2], a study was 
-  initiated to identify the utility weights patients placed on different 
+  : As reported in the textbook where this exercise was sourced [^2], a study 
+  was initiated to identify the utility weights patients placed on different 
   outcomes from THR. These outcomes were consistent with the Markov states 
   conceptualized for the THR model. The respective mean (SD) utilities were 
   reported to be: 
