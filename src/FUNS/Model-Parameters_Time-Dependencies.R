@@ -22,56 +22,60 @@ calc_MR <- function(LT, Age0 = 60, nCycles = 60) {
 
 
 # Calc_RevisionRisk() ==========================================================
-calc_RevisionRisk <- function(Survival, 
-                              Age0 = 60, 
-                              nCycles = 60) {
-  # Survival model fitted to capture intervention (STD vs NP1) and time-to-event. 
-  #   Event: Prosthesis Failure. 
-  #   Coefficients are on the log-scale, so hazard rate can be obtained by 
-  #   exponentiating the coefficients. 
-  Survival <- cbind(coef = Survival, 
-                    HR = exp(Survival))
-  # Estimate Baseline Hazard: 
-  ## calculate lambda and gamma from Weibull distribution. 
-  ##    - lambda: The log of the lambda parameter is a linear sum of the 
-  ##      coefficients multiplied by the explanatory variables in the model. 
-  Lambda <- sapply(X = list(Male = 1, 
-                            Female = 0), 
-                   FUN = \(x){
-                     c(cons = 1, Age = Age0, male = x) * 
-                       Survival[c("cons", "age", "male"), "coef"]
-                   })
-  Lambda <- colSums(x = Lambda, na.rm = FALSE, dims = 1)
-  Lambda <- exp(Lambda)
+# Survival model fitted to capture intervention (STD vs NP1) and time-to-event. 
+#   Event: Prosthesis Failure. 
+#   Coefficients are on the log-scale, so hazard rate can be obtained by 
+#   exponentiating the coefficients. 
+
+scale_Weibull <- function(coefs, Age, Male, j) {
+  j.NP <- grep(pattern = "NP", x = names(coefs), value = TRUE)
+  j.coefs <- matrix(data = c(0, 0, 1, 0, 0, 1), 
+                    nrow = 3, 
+                    ncol = 2, 
+                    byrow = TRUE, 
+                    dimnames = list(j = c("STD", "NP1", "NP2"), 
+                                    coef = c("NP1", "NP2")))
   
-  ##    - gamma: exponentiate the ln.gamma coefficient in the survival model. 
-  GMMA <- Survival["ln.gamma","HR"]
+  if ("NP2" %in% j.NP) {
+    lambda <- 
+      coefs[["cons"]] + 
+      coefs[["age"]]*Age + 
+      coefs[["male"]]*Male + 
+      coefs[["NP1"]]*j.coefs[j,"NP1"] + 
+      coefs[["NP2"]]*j.coefs[j,"NP2"]
+  } else {
+    lambda <- 
+      coefs[["cons"]] + 
+      coefs[["age"]]*Age + 
+      coefs[["male"]]*Male + 
+      coefs[["NP1"]]*j.coefs[j,"NP1"]
+  }
+  lambda <- exp(lambda)
   
-  # Estimate the Relative Risk of Revision for each Prosthesis Type
-  jNames <- grep(pattern = "NP", x = rownames(Survival), value = TRUE)
-  rr <- c(1, Survival[jNames, "HR"])
-  names(rr) <- c("STD", jNames)
+  return(lambda)
+}
+
+calc_RevRisk <- function(Survival, 
+                         j, 
+                         Age0 = 60,
+                         Male = 0, 
+                         nCycles = 60) {
+  # Estimate Parameters from Weibull Distribution ==============================
+  ## Scale (lambda) ------------------------------------------------------------
+  scale <- scale_Weibull(coefs = Survival, 
+                         Age = Age0, 
+                         Male = Male, 
+                         j = j)
+  ## Shape 
+  shape <- exp(Survival[["ln.gamma"]])
   
-  ## Estimate time-dependency
-  Cycle <- 1:nCycles
+  ## Estimate Revision Risk
+  t <- 1:nCycles
   
-  RevisionRisk <- 
-  sapply(X = Lambda, 
-         FUN = \(sex){
-           sapply(X = rr, 
-                  FUN = \(j){
-                    1- exp(sex * j * (((Cycle-1)^GMMA) - (Cycle^GMMA)))
-                   }, 
-                  simplify = TRUE
-                   )
-         }, 
-         simplify = "array"
-         )
+  rr <- scale*(((t-1)^shape) - t^shape)
+  rr <- 1-exp(rr)
   
-  names(dimnames(RevisionRisk)) <- c("Cycle", "j", "Gender")
-  
-  # Return Output
-  return(RevisionRisk)
+  return(rr)
 }
 
 # Modify Parameter List: Insert Time-Dependencies ==============================
@@ -83,11 +87,26 @@ calc_TimeDeps <- function(ParamList,
                           Age0 = Age0, 
                           nCycles = nCycles)
   
-  # Revision Risk stratified by Age and Gender
+  # Revision Risk stratified by j, Age and Gender
+  Gender <- list(Male = 1, Female = 0)
+  j.ID <- c("STD", 
+            grep(pattern = "NP", 
+                 x = names(ParamList$Survival), 
+                 value = TRUE))
+  names(j.ID) <- j.ID
+  
   ParamList$RevisionRisk <- 
-    calc_RevisionRisk(Survival = ParamList$Survival, 
-                      Age0 = Age0, 
-                      nCycles = nCycles)
+    sapply(X = Gender, 
+           FUN = \(sex){
+             sapply(X = j.ID, 
+                     FUN = calc_RevRisk, 
+                     Survival = ParamList$Survival, 
+                     Age0 = Age0, 
+                     nCycles = nCycles, 
+                     Male = sex)
+           }, 
+           simplify = "array")
+  names(dimnames(ParamList$RevisionRisk)) <- c("Cycle", "j", "Gender")
   
   # Arrange List, drop un-necessary list-elements: LifeTables
   ParamList <- ParamList[c("OMR", 
