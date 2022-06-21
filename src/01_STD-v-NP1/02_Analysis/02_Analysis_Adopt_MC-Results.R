@@ -11,7 +11,7 @@ THR.2j <- readr::read_rds(file = file.path("data",
                                            "data-gen", 
                                            "Simulation-Output", 
                                            "01_STD-v-NP1", 
-                                           "THR_MC-Sim_5000.rds"))
+                                           "MC-Sim.rds"))
 
 str(THR.2j)
 str(THR.2j[,,,"Female","60"])

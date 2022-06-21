@@ -19,31 +19,45 @@ THR_Params <- readr::read_rds(file = file.path("data",
 ## Instead of running each analysis separately, I can do them all in a single 
 ## function call and store the output in a deliberately formatted array.
 
+THR.Age <- seq(from = 40, to = 80, by = 20)
+THR.Gender <- c("Male", "Female")
+names(THR.Age) <- THR.Age
+names(THR.Gender) <- THR.Gender
+
+library(foreach)
+library(doParallel)
+registerDoParallel(cores = 6)
+
+Sim.Start <- Sys.time()
+
 simResult <- 
-  replicate(n = 5000, 
-            expr = {
-              Param_i <- DrawParams(ParamList = THR_Params, prob = 1)
-              
-              Result_i <- 
-                sapply(X = c("40" = 40, "60" = 60, "80" = 80), 
-                       FUN = \(age){
-                         sapply(X = c(Male = "Male", Female = "Female"), 
-                                FUN = \(sex){
-                                  sapply(X = c(STD = "STD", NP1 = "NP1"), 
-                                         FUN = runModel, 
-                                         ParamList = Param_i, 
-                                         Age0 = age, 
-                                         Gender = sex, 
-                                         nCycles = 60, 
-                                         cDR = 0.06, 
-                                         oDR = 0.015, 
-                                         simplify = TRUE)
-                                }, 
-                                simplify = "array")
-                       }, 
-                       simplify = "array")
-            },
-            simplify = "array")
+  foreach(n = 1:10000, 
+          .final = simplify2array) %do% {
+    Param_i <- DrawParams(ParamList = THR_Params, 
+                          prob = 1)
+    
+    Result_i <- 
+      sapply(X = THR.Age, 
+             FUN = \(age){
+               sapply(X = THR.Gender, 
+                      FUN = \(sex){
+                        sapply(X = c(STD = "STD", 
+                                     NP1 = "NP1"), 
+                               FUN = runModel, 
+                               ParamList = Param_i, 
+                               Age0 = age, 
+                               Gender = sex, 
+                               nCycles = 60, 
+                               cDR = 0.06, 
+                               oDR = 0.015, 
+                               simplify = TRUE)
+                      }, 
+                      simplify = "array")
+             }, 
+             simplify = "array")
+  }
+
+Sim.Stop <- Sys.time()
 
 
 # Name and Re-arrange array dimensions. 
@@ -56,4 +70,4 @@ readr::write_rds(x = simResult,
                                   "data-gen", 
                                   "Simulation-Output", 
                                   "01_STD-v-NP1", 
-                                  "THR_MC-Sim_5000.rds"))
+                                  "MC-Sim.rds"))
