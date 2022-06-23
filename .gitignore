@@ -45,3 +45,33 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F40_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F40_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M80_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M80_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M80_RRR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M80_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M80_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M60_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M60_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M60_RRR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M60_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M60_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M40_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M40_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M40_RRR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M40_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_M40_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F80_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F80_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F80_RRR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F80_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F80_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F60_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F60_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F60_RRR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F60_OMR.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F60_Costs.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F40_Utilities.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F40_Survival.rds
+data/data-gen/Simulation-Output/02_STD-v-NP1-v-NP2/Nested_MC-Sim_F40_RRR.rds
