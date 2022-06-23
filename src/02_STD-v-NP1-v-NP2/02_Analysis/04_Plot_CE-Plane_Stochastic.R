@@ -9,7 +9,7 @@ THR.3j.MC <- readr::read_rds(file = file.path("data",
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "02_STD-v-NP1-v-NP2", 
-                                              "THR_MC-Sim_5000.rds"))
+                                              "MC-Sim.rds"))
 
 # Base Case: Female, Age 60 ====================================================
 ## Calculate Expected Values ---------------------------------------------------
@@ -40,7 +40,7 @@ CEPlane.BC.MC <-
   labs(title = "Cost-Effectiveness Plane for THR Model (Base Case)", 
        subtitle = "Females, Age 60: STD vs NP1 vs NP2", 
        caption = paste("Data generated from Monte Carlo simulation", 
-                       "of 5,000 iterations."))
+                       "of 10,000 iterations."))
 
 # Scenario Analyses ============================================================
 ## Calculate Expected Values ---------------------------------------------------
@@ -89,7 +89,7 @@ CEPlane.SA.MC <-
   labs(title = "Cost-Effectiveness Plane for THR Model", 
        subtitle = "All Scenarios: STD vs NP1 vs NP2", 
        caption = paste0(paste("Data generated from a Monte Carlo simulation", 
-                              "of 5,000 iterations."), 
+                              "of 10,000 iterations."), 
                         "\n", 
                         "Unusual frontiers due to graph scaling."))
 
