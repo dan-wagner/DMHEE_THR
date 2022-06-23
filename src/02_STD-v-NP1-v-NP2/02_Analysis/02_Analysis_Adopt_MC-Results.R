@@ -11,7 +11,7 @@ THR.3j <- readr::read_rds(file = file.path("data",
                                            "data-gen", 
                                            "Simulation-Output", 
                                            "02_STD-v-NP1-v-NP2", 
-                                           "THR_MC-Sim_5000.rds"))
+                                           "MC-Sim.rds"))
 
 # Analyses =====================================================================
 ## Incremental Analysis --------------------------------------------------------
