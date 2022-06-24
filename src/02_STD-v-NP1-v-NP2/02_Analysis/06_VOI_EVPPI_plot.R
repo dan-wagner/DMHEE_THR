@@ -1,5 +1,5 @@
 # Research Decision
-# Generate Plot of Population EVPI as a function of 
+# Generate Plot of Population EVPPI as a function of 
 # cost-effectiveness threshold
 
 # Import Data ==================================================================

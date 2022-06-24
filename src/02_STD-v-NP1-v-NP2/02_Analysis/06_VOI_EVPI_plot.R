@@ -1,5 +1,6 @@
 # Research Decision
-# Calculate EVPI Statistic
+# Generate Plot of Population EVPI as a function of 
+# cost-effectiveness threshold
 # 01) Import Data ==============================================================
 VoI <- readr::read_rds(file = file.path("data", 
                                         "data-gen", 
