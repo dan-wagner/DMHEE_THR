@@ -35,6 +35,11 @@ names(VoI$EVPPI) <- paste(sub(pattern = "\\d{2}_(OMR|RRR|Survival|Costs|Utilitie
 # Calculate EVPI & EVPPI =======================================================
 library(HEEToolkit)
 LDA <- seq(from = 0, to = 50000, by = 5000)
+## Calculate Effective Population Size -----------------------------------------
+##    From Textbook: 
+##      "For the Hip replacement example, we are going to assume an effective 
+##       technology life of 10 years with 40,000 new patients eligible for 
+##       treatment each year."
 EP <- voi_EP(Yrs = 10, I_t = 20000, DR = 0.03)
 
 Gender <- c(Male = "Male", Female = "Female")
