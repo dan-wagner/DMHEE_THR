@@ -13,9 +13,6 @@ THR.2j <- readr::read_rds(file = file.path("data",
                                            "01_STD-v-NP1", 
                                            "MC-Sim.rds"))
 
-str(THR.2j)
-str(THR.2j[,,,"Female","60"])
-
 # Analyses =====================================================================
 ## Incremental Analysis --------------------------------------------------------
 library(HEEToolkit)
@@ -44,7 +41,7 @@ IA.Scenario <-
 NB.BC <- nb_analysis(data = THR.2j[,,,"Female","60"], 
                      lambda = c(20000, 30000), 
                      Effects = "QALYs", 
-                     type = "NMB")
+                     nbType = "NMB")
 
 NB.Scenario <- 
   sapply(X = c("40" = "40", "60" = "60", "80" = "80"), 
@@ -54,7 +51,7 @@ NB.Scenario <-
                     nb_analysis(data = THR.2j[,,,sex,age],
                                 lambda = c(20000, 30000), 
                                 Effects = "QALYs", 
-                                type = "NMB")
+                                nbType = "NMB")
                   },
                   simplify = "array")
          },

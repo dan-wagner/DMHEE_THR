@@ -7,7 +7,7 @@ THR.2j.MC <- readr::read_rds(file = file.path("data",
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "01_STD-v-NP1", 
-                                              "THR_MC-Sim_5000.rds"))
+                                              "MC-Sim.rds"))
 
 # Prepare Input Data ===========================================================
 LDA.seq <- seq(from = 0, to = 50000, by = 5000)
@@ -27,7 +27,7 @@ NB <- sapply(X = Input.Age,
                   nb_analysis(data = THR.2j.MC[,,,sex,age], 
                               lambda = LDA.seq, 
                               Effects = "QALYs", 
-                              type = "NMB")
+                              nbType = "NMB")
                 })
        }, 
        simplify = "array")

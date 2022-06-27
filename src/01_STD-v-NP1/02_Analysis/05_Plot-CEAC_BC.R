@@ -7,7 +7,7 @@ THR.2j.MC <- readr::read_rds(file = file.path("data",
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "01_STD-v-NP1", 
-                                              "THR_MC-Sim_5000.rds"))
+                                              "MC-Sim.rds"))
 
 # Prepare Input Data ===========================================================
 LDA.seq <- seq(from = 0, to = 50000, by = 5000)
@@ -17,7 +17,7 @@ library(HEEToolkit)
 NB <- nb_analysis(data = THR.2j.MC[,,,"Female","60"], 
                   lambda = LDA.seq, 
                   Effects = "QALYs", 
-                  type = "NMB")
+                  nbType = "NMB")
 
 ## Coerce Into tbl -------------------------------------------------------------
 NB <- tibble::as_tibble(x = NB, rownames = "j")

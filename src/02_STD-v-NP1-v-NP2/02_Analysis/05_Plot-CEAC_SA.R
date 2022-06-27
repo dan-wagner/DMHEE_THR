@@ -27,7 +27,7 @@ sapply(X = THR.Age,
                   nb_analysis(data = THR.3j.MC[,,,Gender,Age], 
                               lambda = LDA, 
                               Effects = "QALYs", 
-                              type = "NMB")
+                              nbType = "NMB")
                 }, 
                 simplify = "array")
        }, 

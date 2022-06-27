@@ -9,7 +9,7 @@ THR.2j.MC <- readr::read_rds(file = file.path("data",
                                            "data-gen", 
                                            "Simulation-Output", 
                                            "01_STD-v-NP1", 
-                                           "THR_MC-Sim_5000.rds"))
+                                           "MC-Sim.rds"))
 THR.2j.D <- readr::read_rds(file = file.path("data", 
                                              "data-gen", 
                                              "Simulation-Output", 

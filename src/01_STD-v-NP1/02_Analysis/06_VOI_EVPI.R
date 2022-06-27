@@ -5,7 +5,7 @@ THR_result <- readr::read_rds(file = file.path("data",
                                                "data-gen", 
                                                "Simulation-Output", 
                                                "01_STD-v-NP1", 
-                                               "THR_MC-Sim_5000.rds"))
+                                               "MC-Sim.rds"))
 
 # 02) Estimate EVPI ============================================================
 library(HEEToolkit)

@@ -17,7 +17,7 @@ library(HEEToolkit)
 NB <- nb_analysis(data = THR.3j.MC[,,,"Female","60"], 
                   lambda = LDA, 
                   Effects = "QALYs", 
-                  type = "NMB")
+                  nbType = "NMB")
 
 # Plot CEAC ====================================================================
 ## Coerce NB Output to a tbl ---------------------------------------------------
