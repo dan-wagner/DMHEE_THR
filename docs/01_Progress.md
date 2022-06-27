@@ -15,9 +15,9 @@ Status indicators for each task (or sub-task) are defined as:
 | [Monte Carlo Simulations](#monte-carlo-simulations) | :white_check_mark: | 
 | [Nested Monte Carlo Simulations](#nested-monte-carlo-simulations)  | :white_check_mark: |
 | :arrow_right: [`STD-v-NP1`](#decision-problem-1) | :white_check_mark: | 
-| :arrow_right: [`STD-v-NP1-v-NP2`](#decision-problem-2) | :x:                |
+| :arrow_right: [`STD-v-NP1-v-NP2`](#decision-problem-2) | :white_check_mark: |
 | Analysis: [Adoption Decision](#adoption-decision) | :white_check_mark: | 
-| Analysis: [Research Decision](#research-decision) | :warning:          | 
+| Analysis: [Research Decision](#research-decision) | :white_check_mark: | 
 
 # Model Development
 Put a summary statement here. 
@@ -140,12 +140,12 @@ Alternatives Compared: `STD-v-NP1-v-NP2`
 
 | Scenario        | &phi; = OMR  | &phi; = RRR  | &phi; = Survival | &phi; = Costs | &phi; = Utilities |
 | --------------- |:-------------:|:-------------:|:-----------------:|:--------------:|:------------------:|
-| Female, 60 (BC) | :x:           | :x:           | :x:               | :x:            |:x:                 |
-| Female, 40      | :x:           | :x:           | :x:               | :x:            |:x:                 |
-| Female, 80      | :x:           | :x:           | :x:               | :x:            |:x:                 | 
-| Male, 40        | :x:           | :x:           | :x:               | :x:            |:x:                 |
-| Male, 60        | :x:           | :x:           | :x:               | :x:            |:x:                 |
-| Male, 80        | :x:           | :x:           | :x:               | :x:            |:x:                 |
+| Female, 60 (BC) | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: |
+| Female, 40      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: |
+| Female, 80      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: | 
+| Male, 40        | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: |
+| Male, 60        | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: |
+| Male, 80        | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |:white_check_mark: |
 
 ## Analyses
 
@@ -168,12 +168,12 @@ Alternatives Compared: `STD-v-NP1-v-NP2`
 
 | Task | `STD-v-NP1`        | `STD-v-NP1-v-NP2` | 
 | ---  | :----------------: | ----------------------- | 
-| EVPI | :white_check_mark: | :x:                     | 
-| :arrow_right: Calculate EVPI for all subgroups | :white_check_mark: | :x: | 
-| :arrow_right: Plot Population EVPI | :white_check_mark: | :x: | 
-| EVPPI | :white_check_mark:| :x:                     | 
-| :arrow_right: &phi; = "OMR" | :white_check_mark: | :x: | 
-| :arrow_right: &phi; = "RRR" | :white_check_mark: | :x: | 
-| :arrow_right: &phi; = "Survival" | :white_check_mark: | :x: | 
-| :arrow_right: &phi; = "Cost_States" | :white_check_mark: | :x: | 
-| :arrow_right: &phi; = "Utilities" | :white_check_mark: | :x: | 
+| EVPI | :white_check_mark: | :white_check_mark:      | 
+| :arrow_right: Calculate EVPI for all subgroups | :white_check_mark: | :white_check_mark: | 
+| :arrow_right: Plot Population EVPI | :white_check_mark: | :white_check_mark: | 
+| EVPPI | :white_check_mark:| :white_check_mark: | 
+| :arrow_right: &phi; = "OMR" | :white_check_mark: | :white_check_mark: | 
+| :arrow_right: &phi; = "RRR" | :white_check_mark: | :white_check_mark: | 
+| :arrow_right: &phi; = "Survival" | :white_check_mark: | :white_check_mark: | 
+| :arrow_right: &phi; = "Cost_States" | :white_check_mark: | :white_check_mark: | 
+| :arrow_right: &phi; = "Utilities" | :white_check_mark: | :white_check_mark: | 
