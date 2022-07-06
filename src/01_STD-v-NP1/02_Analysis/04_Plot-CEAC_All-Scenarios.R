@@ -19,28 +19,37 @@ names(Input.Gender) <- Input.Gender
 Input.Age <- dimnames(THR.2j.MC)[[5]]
 names(Input.Age) <- Input.Age
 
-NB <- sapply(X = Input.Age, 
+
+
+NB <- lapply(X = Input.Age, 
        FUN = \(age){
-         sapply(X = Input.Gender,
-                simplify = "array",
+         lapply(X = Input.Gender,
                 FUN = \(sex){
                   nb_analysis(data = THR.2j.MC[,,,sex,age], 
                               lambda = LDA.seq, 
                               Effects = "QALYs", 
-                              nbType = "NMB")
+                              nbType = "NMB", 
+                              show.error = FALSE)
                 })
-       }, 
-       simplify = "array")
-
-names(dimnames(NB))[c(4,5)] <- names(dimnames(THR.2j.MC))[c(4,5)]
+       })
 
 ## Coerce Into tbl -------------------------------------------------------------
-NB <- tibble::as_tibble(x = NB, rownames = "j")
+NB <- purrr::map_dfr(.x = NB, 
+                     .id = "Age",
+                     .f = \(age){
+                       purrr::map_dfr(.x = age, 
+                                      .id = "Gender",
+                                      .f = \(sex){
+                                        tibble::as_tibble(x = sex, 
+                                                          rownames = "j")
+                                        })
+                       })
+
 NB <- tidyr::pivot_longer(data = NB, 
-                          cols = -"j", 
-                          names_to = c("stat", "lambda", "Gender", "Age"), 
+                          cols = -c("Age", "Gender", "j"), 
+                          names_to = c("stat", "lambda"), 
                           names_sep = "\\.", 
-                          names_transform = list(lambda = as.double),
+                          names_transform = list(lambda = as.double), 
                           values_to = "output") |> 
   tidyr::pivot_wider(names_from = "stat", values_from = "output")
 

@@ -2,7 +2,7 @@
 # Base Case Only
 
 # Import Data ==================================================================
-THR.3j.MC <- readr::read_rds(file = file.path("data", 
+simResult <- readr::read_rds(file = file.path("data", 
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "02_STD-v-NP1-v-NP2", 
@@ -14,10 +14,11 @@ LDA <- seq(from = 0, to = 50000, by = 5000)
 ## Calculate Net-Benefits ------------------------------------------------------
 library(HEEToolkit)
 
-NB <- nb_analysis(data = THR.3j.MC[,,,"Female","60"], 
+NB <- nb_analysis(data = simResult[,,,"Female","60"], 
                   lambda = LDA, 
                   Effects = "QALYs", 
-                  nbType = "NMB")
+                  nbType = "NMB", 
+                  show.error = FALSE)
 
 # Plot CEAC ====================================================================
 ## Coerce NB Output to a tbl ---------------------------------------------------
@@ -33,7 +34,7 @@ PlotData <- tidyr::pivot_wider(data = PlotData,
                                values_from = "result")
 ## Build Plot ------------------------------------------------------------------
 Fig.Cap <- paste("Data generated from Monte Carlo simulation of", 
-                 nrow(THR.3j.MC), "iterations.")
+                 nrow(simResult), "iterations.")
 
 library(ggplot2)
 

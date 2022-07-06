@@ -2,7 +2,7 @@
 # All Scenarios
 
 # Import Data ==================================================================
-THR.3j.MC <- readr::read_rds(file = file.path("data", 
+simResult <- readr::read_rds(file = file.path("data", 
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "02_STD-v-NP1-v-NP2", 
@@ -13,48 +13,53 @@ THR.3j.MC <- readr::read_rds(file = file.path("data",
 LDA <- seq(from = 0, to = 50000, by = 5000)
 ## Calculate Net-Benefits ------------------------------------------------------
 library(HEEToolkit)
-THR.Age <- dimnames(THR.3j.MC)$Age
+THR.Age <- dimnames(simResult)$Age
 names(THR.Age) <- THR.Age
 
-THR.Gender <- dimnames(THR.3j.MC)$Gender
+THR.Gender <- dimnames(simResult)$Gender
 names(THR.Gender) <- THR.Gender
 
-NB <- 
-sapply(X = THR.Age, 
-       FUN = \(Age){
-         sapply(X = THR.Gender, 
-                FUN = \(Gender){
-                  nb_analysis(data = THR.3j.MC[,,,Gender,Age], 
-                              lambda = LDA, 
-                              Effects = "QALYs", 
-                              nbType = "NMB")
-                }, 
-                simplify = "array")
-       }, 
-       simplify = "array")
-
-names(dimnames(NB))[c(4,5)] <- c("Gender", "Age")
+NB <- lapply(X = THR.Age, 
+             FUN = \(age){
+               lapply(X = THR.Gender,
+                      FUN = \(sex){
+                        nb_analysis(data = simResult[,,,sex,age], 
+                                    lambda = LDA, 
+                                    Effects = "QALYs", 
+                                    nbType = "NMB", 
+                                    show.error = FALSE)
+                      })
+             })
 
 # Plot CEAC ====================================================================
 ## Coerce NB Output to a tbl ---------------------------------------------------
-PlotData <- tibble::as_tibble(x = NB, rownames = "j")
-PlotData <- tidyr::pivot_longer(data = PlotData, 
-                                cols = -"j", 
-                                names_to = c("stat", "lambda", "Gender", "Age"), 
-                                names_sep = "\\.", 
-                                names_transform = list(lambda = as.double),
-                                values_to = "result")
-PlotData <- tidyr::pivot_wider(data = PlotData, 
-                               names_from = "stat", 
-                               values_from = "result")
+NB <- purrr::map_dfr(.x = NB, 
+                     .id = "Age",
+                     .f = \(age){
+                       purrr::map_dfr(.x = age, 
+                                      .id = "Gender",
+                                      .f = \(sex){
+                                        tibble::as_tibble(x = sex, 
+                                                          rownames = "j")
+                                      })
+                     })
+
+NB <- tidyr::pivot_longer(data = NB, 
+                          cols = -c("Age", "Gender", "j"), 
+                          names_to = c("stat", "lambda"), 
+                          names_sep = "\\.", 
+                          names_transform = list(lambda = as.double), 
+                          values_to = "output") |> 
+  tidyr::pivot_wider(names_from = "stat", values_from = "output")
+
 ## Build Plot ------------------------------------------------------------------
 Fig.Cap <- paste("Data generated from Monte Carlo simulation of", 
-                 nrow(THR.3j.MC), "iterations.")
+                 nrow(simResult), "iterations.")
 
 library(ggplot2)
 
 CEAC.SA <- 
-  ggplot(data = PlotData, 
+  ggplot(data = NB, 
          mapping = aes(x = lambda, y = prob_CE, colour = j)) + 
   facet_wrap(Gender ~ Age) + 
   geom_line() + 

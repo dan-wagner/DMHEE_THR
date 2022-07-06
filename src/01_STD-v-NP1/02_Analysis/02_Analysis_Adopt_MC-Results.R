@@ -7,64 +7,68 @@
 #       - Output 2: All Scenarios
 
 # Import Data ==================================================================
-THR.2j <- readr::read_rds(file = file.path("data", 
-                                           "data-gen", 
-                                           "Simulation-Output", 
-                                           "01_STD-v-NP1", 
-                                           "MC-Sim.rds"))
+simResult <- readr::read_rds(file = file.path("data", 
+                                              "data-gen", 
+                                              "Simulation-Output", 
+                                              "01_STD-v-NP1", 
+                                              "MC-Sim.rds"))
 
 # Analyses =====================================================================
 ## Incremental Analysis --------------------------------------------------------
 library(HEEToolkit)
 
-IA.BC <- colMeans(x = THR.2j[,,,"Female", "60"], na.rm = FALSE, dims = 1)
-IA.BC <- t(IA.BC)
+IA.BC <- inc_analysis(data = simResult[,,,"Female","60"], Effects = "QALYs")
 
-IA.BC <- inc_analysis(data = IA.BC, Effects = "QALYs")
-
-IA.Scenario <- colMeans(x = THR.2j, na.rm = FALSE, dims = 1)
-IA.Scenario <- aperm(a = IA.Scenario, perm = c("j", "Result", "Gender", "Age"))
-
-IA.Scenario <- 
-  sapply(X = c("40" = "40", "60" = "60", "80" = "80"), 
-         FUN = \(age){
-           sapply(X = c(Male = "Male", Female = "Female"), 
-                  FUN = \(sex){
-                    inc_analysis(data = IA.Scenario[,,sex,age], 
-                                Effects = "QALYs")
-                    },
-                  simplify = "array")
-           },
-         simplify = "array")
+IA.SA <- lapply(X = c("40" = "40", 
+                      "60" = "60", 
+                      "80" = "80"), 
+                FUN = \(age){
+                  lapply(X = c(Male = "Male", 
+                               Female = "Female"), 
+                         FUN = \(sex){
+                           inc_analysis(data = simResult[,,,sex,age])
+                         })
+                })
 
 ## Net-Benefits Framework, (NMB) -----------------------------------------------
-NB.BC <- nb_analysis(data = THR.2j[,,,"Female","60"], 
+NB.BC <- nb_analysis(data = simResult[,,,"Female","60"], 
                      lambda = c(20000, 30000), 
                      Effects = "QALYs", 
-                     nbType = "NMB")
+                     nbType = "NMB", 
+                     show.error = TRUE)
 
-NB.Scenario <- 
-  sapply(X = c("40" = "40", "60" = "60", "80" = "80"), 
-         FUN = \(age){
-           sapply(X = c(Male = "Male", Female = "Female"), 
-                  FUN = \(sex){
-                    nb_analysis(data = THR.2j[,,,sex,age],
-                                lambda = c(20000, 30000), 
-                                Effects = "QALYs", 
-                                nbType = "NMB")
-                  },
-                  simplify = "array")
-         },
-         simplify = "array")
+NB.SA <- lapply(X = c("40" = "40", 
+                      "60" = "60", 
+                      "80" = "80"), 
+                FUN = \(age){
+                  lapply(X = c(Male = "Male", 
+                               Female = "Female"), 
+                         FUN = \(sex){
+                           nb_analysis(data = simResult[,,,sex,age], 
+                                       lambda = c(20000, 30000), 
+                                       Effects = "QALYs", 
+                                       nbType = "NMB", 
+                                       show.error = TRUE)
+                         })
+                })
 
 # Build Display Table ==========================================================
 ## Base Case: Female, Age 60 ---------------------------------------------------
 ### Wrangle Input Data to Correct Format
+####  - Coerce both output to data frames/tbls. 
+####  - Add NA to P(Error) in rows which do not have max P(CE). 
+
+for (i in seq_along(1:dim(NB.BC)[3])) {
+  j <- which.max(x = NB.BC[,"prob_CE",i])
+  NB.BC[-j,"p_error",i] <- NA
+}
+
 DF4tbl <- cbind(as.data.frame(IA.BC), 
                 as.data.frame(NB.BC))
 ### Set Table
 library(gt)
-BC.tab <- gt(data = DF4tbl, rownames_to_stub = TRUE) |> 
+BC.tab <- 
+  gt(data = DF4tbl, rownames_to_stub = TRUE) |> 
   tab_stubhead(label = "j") |> 
   tab_footnote(footnote = "STD: Standard Prosthesis", 
                locations = cells_stub(rows = "STD")) |> 
@@ -74,11 +78,11 @@ BC.tab <- gt(data = DF4tbl, rownames_to_stub = TRUE) |>
 ### Format: Assign Dominance/Extended Dominance Labels
 BC.tab <- 
   BC.tab |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = Dom == 1, missing_text = "D") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = ExtDom == 1, missing_text = "ED") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
@@ -90,7 +94,10 @@ BC.tab <-
 
 ### Format: Net-Benefit Results
 BC.tab <- 
-  BC.tab |> 
+  BC.tab |>
+  sub_missing(columns = contains("p_error"), 
+              rows = everything(), 
+              missing_text = "---") |> 
   tab_spanner(label = paste0("\U03BB = ", "\U00A3", "20000/QALY"), 
               columns = contains("20000")) |> 
   tab_spanner(label = paste0("\U03BB = ", "\U00A3", "30000/QALY"), 
@@ -98,7 +105,9 @@ BC.tab <-
   cols_label("eNB.20000" = "NMB", 
              "eNB.30000" = "NMB", 
              "prob_CE.20000" = "P(CE)", 
-             "prob_CE.30000" = "P(CE)")
+             "prob_CE.30000" = "P(CE)", 
+             "p_error.20000" = "P(Error)", 
+             "p_error.30000" = "P(Error)")
 
 ### Format: Currency & Numbers
 BC.tab <- 
@@ -107,7 +116,8 @@ BC.tab <-
                            "ICER", 
                            contains("NB")), currency = "GBP") |> 
   fmt_number(columns = c(contains(match = "LY"), 
-                         contains(match = "prob")), decimals = 2)
+                         contains(match = "prob"), 
+                         contains(match = "error")), decimals = 2)
 
 ### Add Title & Sub-Title
 BC.tab <- 
@@ -132,35 +142,53 @@ BC.tab <-
 
 ## All Scenarios ---------------------------------------------------------------
 ### Wrangle Input Data to Correct Format
-DF4tbl_2 <- 
-  list(IA = tibble::rownames_to_column(.data = as.data.frame(IA.Scenario), var = "j"),
-       NB = tibble::rownames_to_column(.data = as.data.frame(NB.Scenario), var = "j"))
+Age <- c("40" = "40", "60" = "60", "80" = "80")
+Gender <- c(Male = "Male", Female = "Female")
 
-DF4tbl_2$IA <- 
-  DF4tbl_2$IA |> 
-  tidyr::pivot_longer(cols = -"j", 
-                      names_to = c("Result", "Gender", "Age"), 
-                      names_sep = "\\.", 
-                      values_to = "Output") |> 
-  tidyr::pivot_wider(names_from = "Result", values_from = "Output")
+for (a in seq_along(Age)) {
+  for (g in seq_along(Gender)) {
+    for (i in seq_along(c(1,2))) {
+      j <- which.max(x = NB.SA[[a]][[g]][,"prob_CE",i])
+      NB.SA[[a]][[g]][-j,"p_error",i] <- NA
+    }
+  }
+}
 
-DF4tbl_2$NB <- 
-DF4tbl_2$NB |> 
-  tidyr::pivot_longer(cols = -"j", 
-                      names_to = c("stat", "lambda", "Gender", "Age"), 
-                      names_sep = "\\.", 
-                      values_to = "Result") |> 
-  tidyr::pivot_wider(names_from = c("stat", "lambda"), 
-                     values_from = "Result")
+NB.SA <- 
+purrr::map_dfr(.x = NB.SA, 
+               .id = "Age", 
+               .f = \(age){
+                 purrr::map_dfr(.x = age, 
+                                .id = "Gender", 
+                                .f = \(sex){
+                                  tibble::as_tibble(x = sex, 
+                                                    rownames = "j")
+                        })
+           })
 
-DF4tbl_2 <- dplyr::full_join(x = DF4tbl_2$IA, 
-                             y = DF4tbl_2$NB, 
-                             by = c("j", "Gender", "Age"))
+IA.SA <- 
+  purrr::map_dfr(.x = IA.SA, 
+                 .id = "Age", 
+                 .f = \(age){
+                   purrr::map_dfr(.x = age, 
+                                  .id = "Gender", 
+                                  .f = \(sex){
+                                    tibble::as_tibble(x = sex, 
+                                                      rownames = "j")
+                                  })
+                 })
+
+DF4tbl <- dplyr::full_join(x = IA.SA, 
+                           y = NB.SA, 
+                           by = c("Age", "Gender", "j"))
+
+
+
 
 ### Set Table
 library(gt)
 Scenario.tab <- 
-  gt(data = DF4tbl_2, rowname_col = "j", groupname_col = c("Gender", "Age")) |> 
+  gt(data = DF4tbl, rowname_col = "j", groupname_col = c("Gender", "Age")) |> 
   tab_stubhead(label = "j") |> 
   tab_footnote(footnote = "STD: Standard Prosthesis", 
                locations = cells_stub(rows = "STD")) |> 
@@ -170,11 +198,11 @@ Scenario.tab <-
 ### Format: Assign Dominance/Extended Dominance Labels
 Scenario.tab <- 
   Scenario.tab |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = Dom == 1, missing_text = "D") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = ExtDom == 1, missing_text = "ED") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
@@ -187,14 +215,19 @@ Scenario.tab <-
 ### Format: Net-Benefit Results
 Scenario.tab <- 
   Scenario.tab |> 
+  sub_missing(columns = contains(match = "p_error"), 
+              rows = everything(), 
+              missing_text = "---") |> 
   tab_spanner(label = paste0("\U03BB = ", "\U00A3", "20000/QALY"), 
               columns = contains("20000")) |> 
   tab_spanner(label = paste0("\U03BB = ", "\U00A3", "30000/QALY"), 
               columns = contains("30000")) |> 
-  cols_label("eNB_20000" = "NMB", 
-             "eNB_30000" = "NMB", 
-             "prob_CE_20000" = "P(CE)", 
-             "prob_CE_30000" = "P(CE)")
+  cols_label("eNB.20000" = "NMB", 
+             "eNB.30000" = "NMB", 
+             "prob_CE.20000" = "P(CE)", 
+             "prob_CE.30000" = "P(CE)", 
+             "p_error.20000" = "P(Error)", 
+             "p_error.30000" = "P(Error)")
 
 ### Format: Currency & Numbers
 Scenario.tab <- 
@@ -203,7 +236,8 @@ Scenario.tab <-
                            "ICER", 
                            contains("NB")), currency = "GBP") |> 
   fmt_number(columns = c(contains(match = "LY"), 
-                         contains(match = "prob")), decimals = 2)
+                         contains(match = "prob"), 
+                         contains(match = "error")), decimals = 2)
 
 ### Add Title & Sub-Title
 Scenario.tab <- 

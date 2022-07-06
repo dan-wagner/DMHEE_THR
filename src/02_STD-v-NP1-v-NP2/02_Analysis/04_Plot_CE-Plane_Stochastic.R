@@ -5,20 +5,16 @@
 source(file.path("src", "FUNS", "checkFrontier.R"))
 
 # Import Data ==================================================================
-THR.3j.MC <- readr::read_rds(file = file.path("data", 
+simResult <- readr::read_rds(file = file.path("data", 
                                               "data-gen", 
                                               "Simulation-Output", 
                                               "02_STD-v-NP1-v-NP2", 
                                               "MC-Sim.rds"))
 
 # Base Case: Female, Age 60 ====================================================
-## Calculate Expected Values ---------------------------------------------------
-EV <- colMeans(x = THR.3j.MC[,,,"Female","60"], dims = 1, na.rm = TRUE)
-EV <- t(EV)
-
 ## Perform Incremental Analysis ------------------------------------------------
 library(HEEToolkit)
-PlotData <- inc_analysis(data = EV, Effects = "QALYs")
+PlotData <- inc_analysis(data = simResult[,,,"Female","60"], Effects = "QALYs")
 ## ID j's on the Cost-Effectiveness Frontier -----------------------------------
 PlotData <- checkFrontier(data = PlotData)
 ## Coerce Output to a tbl ------------------------------------------------------
@@ -43,19 +39,16 @@ CEPlane.BC.MC <-
                        "of 10,000 iterations."))
 
 # Scenario Analyses ============================================================
-## Calculate Expected Values ---------------------------------------------------
-EV <- colMeans(x = THR.3j.MC, na.rm = TRUE, dims = 1)
-EV <- aperm(a = EV, perm = c("j", "Result", "Gender", "Age"))
 ## Prepare Plot Data -----------------------------------------------------------
 ##  - Use Functional Programming tools to complete the following: 
 ##    - Perform incremental analyses
 ##    - ID j's which lie on the cost-effectiveness frontier
 ##    - Coerce Output to a single tbl
 
-THR.Gender <- dimnames(EV)$Gender
+THR.Gender <- dimnames(simResult)$Gender
 names(THR.Gender) <- THR.Gender
 
-THR.Age <- dimnames(EV)$Age
+THR.Age <- dimnames(simResult)$Age
 names(THR.Age) <- THR.Age
 
 PlotData <- 
@@ -63,7 +56,7 @@ PlotData <-
                  .f = \(age){
                    purrr::map_dfr(.x = THR.Gender, 
                                   .f = \(sex){
-                                    result <- inc_analysis(data = EV[,,sex,age], 
+                                    result <- inc_analysis(data = simResult[,,,sex,age], 
                                                            Effects = "QALYs")
                                     result <- checkFrontier(data = result)
                                     tibble::as_tibble(x = result, rownames = "j")

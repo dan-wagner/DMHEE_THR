@@ -6,44 +6,41 @@
 #       - Output 2: All Scenarios
 
 # Import Data ==================================================================
-THR.3j <- readr::read_rds(file = file.path("data", 
-                                           "data-gen", 
-                                           "Simulation-Output", 
-                                           "02_STD-v-NP1-v-NP2", 
-                                           "THR_Deter.rds"))
+simResult <- readr::read_rds(file = file.path("data", 
+                                              "data-gen", 
+                                              "Simulation-Output", 
+                                              "02_STD-v-NP1-v-NP2", 
+                                              "THR_Deter.rds"))
 # Incremental Analysis =========================================================
 library(HEEToolkit)
 ## Base Case | Female, Age 60 --------------------------------------------------
-BC.ICER <- inc_analysis(data = THR.3j[,,"Female", "60"], Effects = "QALYs")
-BC.ICER
+BC.ICER <- inc_analysis(data = simResult[,,"Female", "60"], Effects = "QALYs")
 ## All Scenarios ---------------------------------------------------------------
-SCENARIO.ICER <- 
-  sapply(X = c("40" = "40", "60" = "60", "80" = "80"), 
+SA.ICER <- 
+  lapply(X = c("40" = "40", "60" = "60", "80" = "80"), 
          FUN = \(age){
-           sapply(X = c(Male = "Male", Female = "Female"), 
+           lapply(X = c(Male = "Male", Female = "Female"), 
                   FUN = \(sex){
-                    inc_analysis(data = THR.3j[,,sex, age], 
+                    inc_analysis(data = simResult[,,sex, age], 
                                  Effects = "QALYs")
-                  }, 
-                  simplify = "array")
-         }, 
-         simplify = "array")
-names(dimnames(SCENARIO.ICER))[c(3,4)] <- c("Gender", "Age")
+                  })
+         })
 
 # Build Display Tables =========================================================
 library(gt)
 ## Base Case | Female, Age 60 --------------------------------------------------
-BC.tab <- gt(data = as.data.frame(BC.ICER), rownames_to_stub = TRUE) |> 
+BC.tab <- gt(data = as.data.frame(BC.ICER), 
+             rownames_to_stub = TRUE) |> 
   tab_stubhead(label = "j")
 
 ### Format: Assign Dominance/Extended Dominance
 BC.tab <- 
   BC.tab |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = Dom == 1, missing_text = "D") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = ExtDom == 1, missing_text = "ED") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
@@ -91,19 +88,21 @@ BC.tab <-
 
 ## All Scenarios ---------------------------------------------------------------
 ### Wrangle Input Data
-DF4tbl <- as.data.frame(x = SCENARIO.ICER)
-DF4tbl <- 
-tibble::rownames_to_column(.data = DF4tbl, var = "j") |> 
-  tidyr::pivot_longer(cols = -"j", 
-                       names_to = c("Result", "Gender", "Age"), 
-                       names_sep = "\\.", 
-                      names_transform = list(Age = as.double), 
-                       values_to = "Output") |> 
-  tidyr::pivot_wider(names_from = "Result", 
-                     values_from = Output)
+SA.ICER <- purrr::map_dfr(.x = SA.ICER, 
+                          .id = "Age",
+                          .f = \(age){
+                            purrr::map_dfr(.x = age,
+                                           .id = "Gender",
+                                           .f = \(sex){
+                                             tibble::as_tibble(x = sex, 
+                                                               rownames = "j")
+                                           })
+                          })
 
 
-Scenario.tab <- gt(data = DF4tbl, 
+### Define Table
+
+Scenario.tab <- gt(data = SA.ICER, 
                    rowname_col = "j", 
                    groupname_col = c("Gender", "Age")) |> 
   tab_stubhead(label = "j")
@@ -112,11 +111,11 @@ Scenario.tab <- gt(data = DF4tbl,
 ### Format: Assign Dominance/Extended Dominance
 Scenario.tab <- 
   Scenario.tab |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = Dom == 1, missing_text = "D") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = ExtDom == 1, missing_text = "ED") |> 
-  fmt_missing(columns = "ICER", 
+  sub_missing(columns = "ICER", 
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 

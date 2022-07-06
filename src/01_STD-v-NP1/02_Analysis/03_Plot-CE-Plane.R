@@ -126,13 +126,3 @@ ggplot2::ggsave(filename = file.path("results",
 #            show.EV = TRUE) + 
 #  ggplot2::geom_hline(yintercept = 0) + 
 #  ggplot2::geom_vline(xintercept = 0)
-
-
-## Base Case -------------------------------------------------------------------
-viz_CEplane(data = THR.2j[,,,"Female","60"], 
-            Effect = "QALYs", 
-            Currency = "GBP", 
-            show.EV = TRUE, 
-            lambda = NULL)
-
-
