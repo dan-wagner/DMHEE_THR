@@ -59,7 +59,7 @@ NB.SA <- lapply(X = c("40" = "40",
 ####  - Add NA to P(Error) in rows which do not have max P(CE). 
 
 for (i in seq_along(1:dim(NB.BC)[3])) {
-  j <- which.max(x = NB.BC[,"prob_CE",i])
+  j <- which.max(x = NB.BC[,"eNB",i])
   NB.BC[-j,"p_error",i] <- NA
 }
 
@@ -148,7 +148,7 @@ Gender <- c(Male = "Male", Female = "Female")
 for (a in seq_along(Age)) {
   for (g in seq_along(Gender)) {
     for (i in seq_along(c(1,2))) {
-      j <- which.max(x = NB.SA[[a]][[g]][,"prob_CE",i])
+      j <- which.max(x = NB.SA[[a]][[g]][,"eNB",i])
       NB.SA[[a]][[g]][-j,"p_error",i] <- NA
     }
   }
