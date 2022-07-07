@@ -31,7 +31,11 @@ library(gt)
 ## Base Case | Female, Age 60 --------------------------------------------------
 BC.tab <- gt(data = as.data.frame(BC.ICER), 
              rownames_to_stub = TRUE) |> 
-  tab_stubhead(label = "j")
+  tab_stubhead(label = "j") |> 
+  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
+                                "NP1: New Prosthesis 1", 
+                                "NP2: New Prosthesis 2", sep = ", "), 
+               locations = cells_stubhead())
 
 ### Format: Assign Dominance/Extended Dominance
 BC.tab <- 
@@ -44,10 +48,12 @@ BC.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Currency and Numbers
@@ -61,15 +67,6 @@ BC.tab <-
   BC.tab |> 
   tab_header(title = "THR Model Cost-Effectiveness Results: Incremental Analysis", 
              subtitle = "Deterministic Simulation, Base Case: Female, Age 60")
-
-### Add Footnotes
-BC.tab <- 
-  BC.tab |> 
-  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
-                                "NP1: New Prosthesis 1", 
-                                "NP2: New Prosthesis 2", 
-                                sep = ", "), 
-               locations = cells_stubhead())
 
 ### Modify Table Theme
 BC.tab <- 
@@ -105,7 +102,11 @@ SA.ICER <- purrr::map_dfr(.x = SA.ICER,
 Scenario.tab <- gt(data = SA.ICER, 
                    rowname_col = "j", 
                    groupname_col = c("Gender", "Age")) |> 
-  tab_stubhead(label = "j")
+  tab_stubhead(label = "j") |> 
+  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
+                                "NP1: New Prosthesis 1", 
+                                "NP2: New Prosthesis 2", sep = ", "), 
+               locations = cells_stubhead())
 
 
 ### Format: Assign Dominance/Extended Dominance
@@ -119,10 +120,12 @@ Scenario.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Currency and Numbers
@@ -136,15 +139,6 @@ Scenario.tab <-
   Scenario.tab |> 
   tab_header(title = "THR Model Cost-Effectiveness Results: Incremental Analysis", 
              subtitle = "Deterministic Simulation, All Scenarios")
-
-### Add Footnotes
-Scenario.tab <- 
-  Scenario.tab |> 
-  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
-                                "NP1: New Prosthesis 1", 
-                                "NP2: New Prosthesis 2", 
-                                sep = ", "), 
-               locations = cells_stubhead())
 
 ### Modify Table Theme
 Scenario.tab <- 

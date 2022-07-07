@@ -70,10 +70,10 @@ library(gt)
 BC.tab <- 
   gt(data = DF4tbl, rownames_to_stub = TRUE) |> 
   tab_stubhead(label = "j") |> 
-  tab_footnote(footnote = "STD: Standard Prosthesis", 
-               locations = cells_stub(rows = "STD")) |> 
-  tab_footnote(footnote = "NP1: New Prosthesis 1", 
-               locations = cells_stub(rows = "NP1"))
+  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
+                                "NP1: New Prosthesis 1", 
+                                sep = ", "), 
+               locations = cells_stubhead())
 
 ### Format: Assign Dominance/Extended Dominance Labels
 BC.tab <- 
@@ -86,10 +86,12 @@ BC.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Net-Benefit Results
@@ -190,10 +192,9 @@ library(gt)
 Scenario.tab <- 
   gt(data = DF4tbl, rowname_col = "j", groupname_col = c("Gender", "Age")) |> 
   tab_stubhead(label = "j") |> 
-  tab_footnote(footnote = "STD: Standard Prosthesis", 
-               locations = cells_stub(rows = "STD")) |> 
-  tab_footnote(footnote = "NP1: New Prosthesis 1", 
-               locations = cells_stub(rows = "NP1"))
+  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
+                                "NP1: New Prosthesis 1", sep = ", "), 
+               locations = cells_stubhead())
 
 ### Format: Assign Dominance/Extended Dominance Labels
 Scenario.tab <- 
@@ -206,10 +207,12 @@ Scenario.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Net-Benefit Results

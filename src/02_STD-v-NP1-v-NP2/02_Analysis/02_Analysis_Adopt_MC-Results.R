@@ -86,10 +86,12 @@ BC.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Net-Benefit Results
@@ -204,10 +206,12 @@ Scenario.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Net-Benefit Results

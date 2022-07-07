@@ -33,7 +33,8 @@ SA.ICER <-
 # Build Display Tables =========================================================
 library(gt)
 ## Base Case | Female, Age 60 --------------------------------------------------
-BC.tab <- gt(data = as.data.frame(BC.ICER), rownames_to_stub = TRUE) |> 
+BC.tab <- 
+  gt(data = as.data.frame(BC.ICER), rownames_to_stub = TRUE) |> 
   tab_stubhead(label = "j")
 
 ### Format: Assign Dominance/Extended Dominance
@@ -68,10 +69,8 @@ BC.tab <-
 ### Add Footnotes
 BC.tab <- 
   BC.tab |> 
-  tab_footnote(footnote = "STD: Standard Prosthesis", 
-               locations = cells_stub(rows = "STD")) |> 
-  tab_footnote(footnote = "NP1: New Prosthesis 1", 
-               locations = cells_stub(rows = "NP1"))
+  tab_footnote(footnote = "STD: Standard Prosthesis; NP1: New Prosthesis 1", 
+               locations = cells_stubhead())
 
 ### Modify Table Theme
 BC.tab <- 
@@ -106,6 +105,8 @@ purrr::map_dfr(.x = SA.ICER,
 Scenario.tab <- gt(data = SA.ICER, 
                    rowname_col = "j", 
                    groupname_col = c("Gender", "Age"))
+Scenario.tab <- tab_stubhead(data = Scenario.tab, 
+                             label = "j")
 
 
 ### Format: Assign Dominance/Extended Dominance
@@ -119,10 +120,12 @@ Scenario.tab <-
               rows = (Dom == 0) & (ExtDom == 0), missing_text = "---") |> 
   tab_footnote(footnote = "D: Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = Dom == 1)) |> 
+                                      rows = Dom == 1), 
+               placement = "right") |> 
   tab_footnote(footnote = "ED: Extendedly Dominanted", 
                locations = cells_body(columns = c(ICER), 
-                                      rows = ExtDom == 1)) |> 
+                                      rows = ExtDom == 1), 
+               placement = "right") |> 
   cols_hide(columns = contains("Dom"))
 
 ### Format: Currency and Numbers
@@ -140,10 +143,9 @@ Scenario.tab <-
 ### Add Footnotes
 Scenario.tab <- 
   Scenario.tab |> 
-  tab_footnote(footnote = "STD: Standard Prosthesis", 
-               locations = cells_stub(rows = "STD")) |> 
-  tab_footnote(footnote = "NP1: New Prosthesis 1", 
-               locations = cells_stub(rows = "NP1"))
+  tab_footnote(footnote = paste("STD: Standard Prosthesis", 
+                                "NP1: New Prosthesis 1"), 
+               locations = cells_stubhead())
 
 ### Modify Table Theme
 Scenario.tab <- 
