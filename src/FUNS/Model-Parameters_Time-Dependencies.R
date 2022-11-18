@@ -19,63 +19,89 @@ calc_MR <- function(LT, Age0 = 60, nCycles = 60) {
   return(MR)
 }
 
+# Calculate Revision Risk ======================================================
+#   A parametrix survival model was fitted to a weibull distribution under a 
+#   proportional hazards assumption. 
+#   - Goal of functions below are to extrapolate the survival function over the 
+#     necessary time horizon and then calculate the corresponding survival 
+#     probability.
 
-
-# Calc_RevisionRisk() ==========================================================
-# Survival model fitted to capture intervention (STD vs NP1) and time-to-event. 
-#   Event: Prosthesis Failure. 
-#   Coefficients are on the log-scale, so hazard rate can be obtained by 
-#   exponentiating the coefficients. 
-
-scale_Weibull <- function(coefs, Age, Male, j) {
-  j.NP <- grep(pattern = "NP", x = names(coefs), value = TRUE)
-  j.coefs <- matrix(data = c(0, 0, 1, 0, 0, 1), 
-                    nrow = 3, 
-                    ncol = 2, 
-                    byrow = TRUE, 
-                    dimnames = list(j = c("STD", "NP1", "NP2"), 
-                                    coef = c("NP1", "NP2")))
-  
-  if ("NP2" %in% j.NP) {
-    lambda <- 
-      coefs[["cons"]] + 
-      coefs[["age"]]*Age + 
-      coefs[["male"]]*Male + 
-      coefs[["NP1"]]*j.coefs[j,"NP1"] + 
-      coefs[["NP2"]]*j.coefs[j,"NP2"]
+## scale_weibull ---------------------------------------------------------------
+##  Estimate the scale parameter for the weibull distribution
+scale_weibull <- function(coefs, age = 60, male = 1) {
+  # detect presence of NP2 option
+  np2_present <- "NP2" %in% names(coefs)
+  # assign names to different alternatives for j
+  j <- grep(pattern = "NP", x = names(coefs), value = TRUE)
+  j <- c(sort(x = j, decreasing = TRUE), "STD")
+  # set coefficient levels
+  if (isTRUE(np2_present)) {
+    coef_levels <- expand.grid(cons = 1, 
+                               age = age, 
+                               male = male, 
+                               NP1 = c(1,0), 
+                               NP2 = c(1,0))
+    coef_levels <- subset(x = coef_levels, NP1 != 1 | NP2 != 1)
   } else {
-    lambda <- 
-      coefs[["cons"]] + 
-      coefs[["age"]]*Age + 
-      coefs[["male"]]*Male + 
-      coefs[["NP1"]]*j.coefs[j,"NP1"]
+    coef_levels <- expand.grid(cons = 1, age = age, male = male, NP1 = c(1,0))
   }
-  lambda <- exp(lambda)
+  coef_levels <- as.matrix(coef_levels)
+  rownames(coef_levels) <- j
+  # Calculate the scale parameter for each j
+  wbl_scale <- apply(X = coef_levels, 
+                     MARGIN = 1, 
+                     FUN = `*`, 
+                     coefs)
+  wbl_scale <- colSums(x = wbl_scale, na.rm = TRUE, dims = 1)
+  wbl_scale <- exp(wbl_scale)
   
-  return(lambda)
+  return(wbl_scale)
+}
+## weibull_params -------------------------------------------------------------- 
+##  generate shape/scale parameters from regression coefficients
+weibull_params <- function(coefs, age, male) {
+  pos_shape <- which("ln.gamma" %in% names(coefs))
+  # shape ----------------------------------------
+  wph_shape <- exp(coefs[[pos_shape]])
+  # scale ----------------------------------------
+  wph_scale <- scale_weibull(coefs = coefs[-pos_shape], 
+                             age = age, 
+                             male = male)
+  # Assemble list
+  params <- list(shape = wph_shape, scale = wph_scale)
+  
+  return(params)
 }
 
-calc_RevRisk <- function(Survival, 
-                         j, 
-                         Age0 = 60,
-                         Male = 0, 
-                         nCycles = 60) {
-  # Estimate Parameters from Weibull Distribution ==============================
-  ## Scale (lambda) ------------------------------------------------------------
-  scale <- scale_Weibull(coefs = Survival, 
-                         Age = Age0, 
-                         Male = Male, 
-                         j = j)
-  ## Shape 
-  shape <- exp(Survival[["ln.gamma"]])
+## extrapolate_survival --------------------------------------------------------
+##  Uses the estimated parameters for the weibull distribution to estimate the
+##  cdf over the model time horizon. Once complete, P(survival) is estimated and 
+##  returned.
+
+extrapolate_survival <- function(coefs, 
+                                 age, 
+                                 male, 
+                                 n_cycles) {
+  # set parameters for survival distribution
+  surv_params <- weibull_params(coefs = coefs, age = age, male = male)
+  # Extrapolate CDF over model time horizon ------------------------------------
+  ## For each treatment at the end and beginning of each cycle
+  cycle_time <- seq_len(length.out = n_cycles)
   
-  ## Estimate Revision Risk
-  t <- 1:nCycles
-  
-  rr <- scale*(((t-1)^shape) - t^shape)
-  rr <- 1-exp(rr)
-  
-  return(rr)
+  CDF <- sapply(X = list(end = cycle_time, start = cycle_time-1), 
+                FUN = \(TH){
+                  mapply(FUN = flexsurv::pweibullPH, 
+                         scale = surv_params$scale, 
+                         MoreArgs = list(q = TH, 
+                                         shape = surv_params$shape))
+                }, 
+                simplify = "array")
+  # Survival Function is the complement to CDF
+  p_survival <- 1-CDF
+  # Calculate Ratio: tells those survived at end who were also alive at start
+  p_survival <- p_survival[,,"end"]/p_survival[,,"start"]
+  # return result
+  return(p_survival)
 }
 
 # Modify Parameter List: Insert Time-Dependencies ==============================
@@ -88,27 +114,18 @@ calc_TimeDeps <- function(ParamList,
                           nCycles = nCycles)
   
   # Revision Risk stratified by j, Age and Gender
-  Gender <- list(Male = 1, Female = 0)
-  j.ID <- c("STD", 
-            grep(pattern = "NP", 
-                 x = names(ParamList$Survival), 
-                 value = TRUE))
-  names(j.ID) <- j.ID
-  
   ParamList$RevisionRisk <- 
-    sapply(X = Gender, 
-           FUN = \(sex){
-             sapply(X = j.ID, 
-                     FUN = calc_RevRisk, 
-                     Survival = ParamList$Survival, 
-                     Age0 = Age0, 
-                     nCycles = nCycles, 
-                     Male = sex)
-           }, 
+    sapply(X = list(Male = 1, Female = 0), 
+           FUN = extrapolate_survival, 
+           coefs = ParamList$Survival, 
+           age = Age0, 
+           n_cycles = nCycles, 
            simplify = "array")
+  ParamList$RevisionRisk <- 1 - ParamList$RevisionRisk
+  
   names(dimnames(ParamList$RevisionRisk)) <- c("Cycle", "j", "Gender")
   
-  # Arrange List, drop un-necessary list-elements: LifeTables
+  # Arrange List, drop un-necessary list-elements: LifeTables, Survival
   ParamList <- ParamList[c("OMR", 
                            "RRR", 
                            "MR", 
