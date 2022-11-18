@@ -16,7 +16,7 @@ library(HEEToolkit)
 
 NB <- nb_analysis(data = THR.2j.MC[,,,"Female","60"], 
                   lambda = LDA.seq, 
-                  Effects = "QALYs", 
+                  effect_measure = "QALYs", 
                   nbType = "NMB")
 
 ## Coerce Into tbl -------------------------------------------------------------

@@ -17,7 +17,8 @@ simResult <- readr::read_rds(file = file.path("data",
 ## Incremental Analysis --------------------------------------------------------
 library(HEEToolkit)
 
-IA.BC <- inc_analysis(data = simResult[,,,"Female","60"], Effects = "QALYs")
+IA.BC <- inc_analysis(data = simResult[,,,"Female","60"], 
+                      effect_measure = "QALYs")
 IA.SA <- lapply(X = c("40" = "40", 
                       "60" = "60", 
                       "80" = "80"), 
@@ -32,7 +33,7 @@ IA.SA <- lapply(X = c("40" = "40",
 ## Net-Benefits Framework, (NMB) -----------------------------------------------
 NB.BC <- nb_analysis(data = simResult[,,,"Female","60"], 
                      lambda = c(20000, 30000), 
-                     Effects = "QALYs", 
+                     effect_measure = "QALYs", 
                      nbType = "NMB", 
                      show.error = TRUE)
 
@@ -45,7 +46,7 @@ NB.SA <- lapply(X = c("40" = "40",
                          FUN = \(sex){
                            nb_analysis(data = simResult[,,,sex,age], 
                                        lambda = c(20000, 30000), 
-                                       Effects = "QALYs", 
+                                       effect_measure = "QALYs", 
                                        nbType = "NMB", 
                                        show.error = TRUE)
                          })

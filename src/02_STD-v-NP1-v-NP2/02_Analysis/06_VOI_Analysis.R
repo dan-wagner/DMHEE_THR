@@ -55,7 +55,7 @@ VoI$EVPI <- sapply(X = Age,
                               calc_EVPI(data = VoI$EVPI[,,,sex,age], 
                                         lambda = LDA, 
                                         EffPop = EP, 
-                                        Effects = "QALYs", 
+                                        effect_measure = "QALYs", 
                                         nbType = "NMB")
                             }, 
                             simplify = "array")
@@ -72,7 +72,7 @@ VoI$EVPPI <- purrr::map_dfr(.x = VoI$EVPPI,
                               result <- calc_EVPPI(data = nmc, 
                                                    lambda = LDA, 
                                                    EffPop = EP, 
-                                                   Effects = "QALYs", 
+                                                   effect_measure = "QALYs", 
                                                    nbType = "NMB")
                               
                               tibble::as_tibble(x = result, 

@@ -16,7 +16,7 @@ library(HEEToolkit)
 
 NB <- nb_analysis(data = simResult[,,,"Female","60"], 
                   lambda = LDA, 
-                  Effects = "QALYs", 
+                  effect_measure = "QALYs", 
                   nbType = "NMB", 
                   show.error = FALSE)
 

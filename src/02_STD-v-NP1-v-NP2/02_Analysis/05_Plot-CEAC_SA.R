@@ -25,7 +25,7 @@ NB <- lapply(X = THR.Age,
                       FUN = \(sex){
                         nb_analysis(data = simResult[,,,sex,age], 
                                     lambda = LDA, 
-                                    Effects = "QALYs", 
+                                    effect_measure = "QALYs", 
                                     nbType = "NMB", 
                                     show.error = FALSE)
                       })

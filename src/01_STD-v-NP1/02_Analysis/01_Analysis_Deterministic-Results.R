@@ -14,7 +14,8 @@ simResult.D <- readr::read_rds(file = file.path("data",
 # Incremental Analysis =========================================================
 library(HEEToolkit)
 ## Base Case | Female, Age 60 --------------------------------------------------
-BC.ICER <- inc_analysis(data = simResult.D[,,"Female", "60"], Effects = "QALYs")
+BC.ICER <- inc_analysis(data = simResult.D[,,"Female", "60"], 
+                        effect_measure = "QALYs")
 ## All Scenarios ---------------------------------------------------------------
 ### NOTE: Don't simplify to an array. Ordering of incremental analysis results 
 ###       will matter. Best to leave it as a nested list, which can be coerced
@@ -26,7 +27,7 @@ SA.ICER <-
            lapply(X = c(Male = "Male", Female = "Female"), 
                   FUN = \(sex){
                     inc_analysis(data = simResult.D[,,sex,age], 
-                                 Effects = "QALYs")
+                                 effect_measure = "QALYs")
                   })
          })
 

@@ -14,7 +14,8 @@ simResult <- readr::read_rds(file = file.path("data",
 # Base Case: Female, Age 60 ====================================================
 ## Perform Incremental Analysis ------------------------------------------------
 library(HEEToolkit)
-PlotData <- inc_analysis(data = simResult[,,,"Female","60"], Effects = "QALYs")
+PlotData <- inc_analysis(data = simResult[,,,"Female","60"], 
+                         effect_measure = "QALYs")
 ## ID j's on the Cost-Effectiveness Frontier -----------------------------------
 PlotData <- checkFrontier(data = PlotData)
 ## Coerce Output to a tbl ------------------------------------------------------
@@ -57,7 +58,7 @@ PlotData <-
                    purrr::map_dfr(.x = THR.Gender, 
                                   .f = \(sex){
                                     result <- inc_analysis(data = simResult[,,,sex,age], 
-                                                           Effects = "QALYs")
+                                                           effect_measure = "QALYs")
                                     result <- checkFrontier(data = result)
                                     tibble::as_tibble(x = result, rownames = "j")
                                   },

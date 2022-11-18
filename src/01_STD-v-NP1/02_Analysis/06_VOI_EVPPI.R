@@ -54,7 +54,7 @@ EVPPI <- lapply(X = EVPPI.paths,
                   calc_EVPPI(data = nmc, 
                              lambda = LDA, 
                              EffPop = EP, 
-                             Effects = "QALYs", 
+                             effect_measure = "QALYs", 
                              nbType = "NMB", 
                              params = NULL)
        })

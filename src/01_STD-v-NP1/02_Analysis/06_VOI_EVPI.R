@@ -33,7 +33,7 @@ sapply(X = THR.Age,
                   calc_EVPI(data = THR_result[,,,Gender,Age], 
                             lambda = LDA, 
                             EffPop = EP, 
-                            Effects = "QALYs", 
+                            effect_measure = "QALYs", 
                             nbType = "NMB")
                 }, 
                 simplify = "array")
