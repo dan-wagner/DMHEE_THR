@@ -20,7 +20,7 @@ calc_MR <- function(LT, Age0 = 60, nCycles = 60) {
 }
 
 # Calculate Revision Risk ======================================================
-#   A parametrix survival model was fitted to a weibull distribution under a 
+#   A parametric survival model was fitted to a weibull distribution under a 
 #   proportional hazards assumption. 
 #   - Goal of functions below are to extrapolate the survival function over the 
 #     necessary time horizon and then calculate the corresponding survival 
@@ -100,6 +100,7 @@ extrapolate_survival <- function(coefs,
   p_survival <- 1-CDF
   # Calculate Ratio: tells those survived at end who were also alive at start
   p_survival <- p_survival[,,"end"]/p_survival[,,"start"]
+  p_survival <- ifelse(is.nan(p_survival), 0, p_survival)
   # return result
   return(p_survival)
 }
