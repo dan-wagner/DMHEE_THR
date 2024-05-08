@@ -149,13 +149,41 @@ effects_cohort <- function(trace,
 }
 
 # RUN Whole Model: Returns Costs & Effects for one arm #########################
-runModel <- function(ParamList,
-                     j, 
+runModel <- function(j, 
+                     ParamList,
                      Age0 = 60, 
                      Gender = "Female",
                      nCycles = 60, 
                      cDR = 0.06, 
                      oDR = 0.015) {
+  # Estimate Costs and Benefits for a Single Alternative
+  #
+  # Args:
+  #   j: Character. The alternative of interest. Accepted values include
+  #      `"STD"`, `"NP1"`, or `"NP2"` (if available). 
+  #   ParamList: List. The list of sampled parameter values. Expects the output
+  #     from the function DrawParams(). 
+  #   Age0: Numeric. The age of the simulated cohort at baseline. 
+  #   Gender: Character. The gender of the simulated cohort. 
+  #   nCycles: Numeric (integer). Refers to the total number of cycles (years)
+  #     in the cohort simulation. Default = 60 (base case). 
+  #   cDR: Numeric (Default = 0.06). The discount rate to apply to costs. 
+  #   oDR: Numeric (Default = 0.015). The discount rate to apply to benefits. 
+  #
+  # Details:
+  #   The model can be broken down into four distinct tasks. 
+  #   1) Define the transition matrix with probabilities specific to the 
+  #      declared alternative, age, and gender. 
+  #   2) Track the cohort through the model structure over the specified time
+  #      horizon. 
+  #   3) Estimate benefits
+  #   4) Estimate costs. 
+  #   5) Discont costs and benefits, then calculate totals over simulated time
+  #      horizon. 
+  #
+  # Returns:
+  #   A named numeric vector of length three: Costs, LYs, and QALYs. 
+  
   j <- match.arg(arg = j, choices = c("STD", "NP1", "NP2"))
   Gender <- match.arg(arg = Gender, choices = c("Male", "Female"))
   
