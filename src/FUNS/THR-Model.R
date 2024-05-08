@@ -1,14 +1,31 @@
 # 1) Define Transition Matrix (Q) ##############################################
-define_tmat <- function(ParamList, 
-                        j, 
+define_tmat <- function(j, 
+                        ParamList, 
                         nCycles = 60, 
                         Gender) {
+  # Define Transition Matrix for a Specific Alternative
+  #
+  # Args:
+  #   j: Character. The arm of the decision model. Accepted values include
+  #     `"STD"`, `"NP1", or "NP2` (depending on configuration). 
+  #   ParamList: List. A modified list of the input parameters. Expects the 
+  #      output from the function calc_TimeDeps(). 
+  #   nCycles: Numeric (Default = 60). The number of cycles to include in the 
+  #     simulation. 
+  #   Gender: Character. The gender of the simulated population. Accepted values
+  #     include `"Male"` or `"Female"`. 
+  #
+  # Returns:
+  #   A 3-dimensional array representing the transition probabiltiies for the 
+  #   specified configuration. Rows represent the start state, columns represent
+  #   the end state, and the matrices represent each cycle of the simulation. 
+  
   # Build Blank Transition Matrix (Q) 
   Mstates <- c("PRI_THR", "PRI_Success", 
                "REV_THR", "REV_Success", "Death")
   
   Q <- array(data = 0, 
-             dim = c(length(Mstates), length(Mstates), length(1:nCycles)), 
+             dim = c(length(Mstates), length(Mstates), nCycles), 
              dimnames = list(Start = Mstates, End = Mstates, Cycle = NULL))
   
   # Apply Transition Probabilities =============================================
