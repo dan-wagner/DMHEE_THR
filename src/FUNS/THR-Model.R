@@ -48,13 +48,14 @@ track_cohort <- function(Q,
                  dim = c(length(1:nCycles), length(colnames(Q))), 
                  dimnames = list(Cycle = NULL, 
                                  State = colnames(Q)))
+  # Set Membership for Cycle 0
+  cohort_init <- c(nStart, rep(0, 4))
+  names(cohort_init) <- colnames(Q)
+  
   # Populate Cohort Trace
   for (i in seq_along(1:nCycles)) {
     if (i == 1) {
-      Cohort0 <- c(nStart, rep(0, 4))
-      names(Cohort0) <- colnames(Q)
-      
-      trace[i, ] <- Cohort0 %*% Q[,,i]
+      trace[i, ] <- cohort_init %*% Q[,,i]
     } else {
       trace[i, ] <- trace[i-1, ] %*% Q[,,i]
     }
