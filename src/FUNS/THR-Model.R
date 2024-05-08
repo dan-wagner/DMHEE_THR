@@ -40,20 +40,35 @@ define_tmat <- function(ParamList,
 }
 
 # 2) Track Cohort (trace) ######################################################
-track_cohort <- function(Q, 
-                         nCycles = 60, 
-                         nStart = 1000) {
+track_cohort <- function(Q, nStart = 1000) {
+  # Generate the Cohort Trace for the Economic Model
+  #
+  # Args:
+  #   Q: Numeric. A 3-dimensional array representing the time-dependent 
+  #      transition probabilities. 
+  #   nStart: Numeric. The total size of the cohort to simulate. 
+  #
+  # Returns:
+  #   An array with 2 dimensions (i.e. matrix). Rows represent the cycle of the 
+  #   simulation. Columns represent each markov state. Values represent the 
+  #   proportion of the cohort occupying each state. 
+  
   # Construct Blank Cohort Trace 
+  #   Define Number of Cycles
+  n_cycles <- dim(Q)[[3]]
+  #   Define Health States
+  states <- unique(x = c(colnames(Q), rownames(Q)))
+  #   Create Array
   trace <- array(data = 0, 
-                 dim = c(length(1:nCycles), length(colnames(Q))), 
+                 dim = c(n_cycles, length(states)), 
                  dimnames = list(Cycle = NULL, 
-                                 State = colnames(Q)))
+                                 State = states))
   # Set Membership for Cycle 0
   cohort_init <- c(nStart, rep(0, 4))
   names(cohort_init) <- colnames(Q)
   
   # Populate Cohort Trace
-  for (i in seq_along(1:nCycles)) {
+  for (i in seq_along(1:n_cycles)) {
     if (i == 1) {
       trace[i, ] <- cohort_init %*% Q[,,i]
     } else {
