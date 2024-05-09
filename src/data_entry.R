@@ -1,7 +1,7 @@
 # Script to Create Raw Data for the Reproducible Workflow. 
 # Should be executed infrequently. 
 
-# Hospital Data ================================================================
+# Post-Op Data ================================================================
 #   Operative Mortality Rate:
 #     The hospital records of a sample of 100 patients receiving a primary 
 #     THR were examined retrospectively. Of these patients, two died either 
@@ -14,12 +14,12 @@
 #     one year. During this time, four patients had undergone a further 
 #     revision procedure. 
 
-HospitalData <- 
+PostOp <- 
   matrix(data = c(2, 4, 100, 100), 
          nrow = 2, 
          ncol = 2, 
          dimnames = list(Outcome = c("OMR", "RRR"),
                          c("events", "N")))
 
-readr::write_rds(x = HospitalData,
-                 file = file.path("data", "data-raw", "HospitalData.rds"))
+readr::write_rds(x = PostOp,
+                 file = file.path("data", "data-raw", "PostOp.rds"))
