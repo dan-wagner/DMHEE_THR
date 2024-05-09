@@ -1,3 +1,9 @@
+# Functions responsible for preparing, generating, or drawing the simulation
+# parameter. 
+#   get_params
+#   draw_params
+#   mom_params
+
 getParams <- function(FileName = "params.rds", include_NP2 = FALSE) {
   # Get Model Parameters
   #
@@ -87,6 +93,144 @@ getParams <- function(FileName = "params.rds", include_NP2 = FALSE) {
     # Subset Prices
     params$Prices <- params$Prices[-3]
   }
+  
+  return(params)
+}
+
+mom_params <- function(Mean, SE, dist){
+  # Generate Distribution Parameters Using Method-of-Moments Approach
+  #
+  # Args:
+  #   Mean: Numeric. The mean value for the data of interest. 
+  #   SE: Numeric. The standard error for the data of interest. 
+  #   dist: Character. The name of the distribution to calculate parameters
+  #       for. Expects one of: `"beta"` or `"gamma"`.
+  # 
+  # Returns:
+  #   A list with two elements. 
+  #   If dist = "beta", element names will be: shape1, shape2
+  #   If dist = "gamma", element names will be: shape, rate. 
+  
+  # Verify dist argument
+  dist <- 
+    match.arg(arg = dist, choices = c("beta", "gamma"), several.ok = FALSE)
+  
+  # Calculate Parameters
+  mom <- switch(dist,
+                "beta" = list(shape1 = NULL, shape2 = NULL),
+                "gamma" = list(shape = NULL, rate = NULL))
+  #   Element names should match the parameters of the distributions in R. 
+  if (dist == "beta") {
+    mom$shape1 <- Mean * ((Mean * (1 - Mean)) / (SE^2) - 1)
+    mom$shape2 <- mom$shape1 * (1 - Mean) / Mean
+    
+    mom$shape1 <- ifelse(is.nan(mom$shape1), 0, mom$shape1)
+    mom$shape2 <- ifelse(is.nan(mom$shape2), 1, mom$shape2)
+  } else if (dist == "gamma") {
+    mom$shape <- (Mean^2) / (SE^2)
+    mom$rate <- (SE^2) / Mean
+    
+    mom$shape <- ifelse(is.nan(mom$shape), 0, mom$shape)
+    mom$rate <- ifelse(is.nan(mom$rate), 1, mom$rate)
+  }
+  
+  return(mom)
+}
+
+draw_params <- function(params, prob = FALSE) {
+  # Draw Values for Simulation
+  #
+  # Args:
+  #   params: A list of parameter values required by the simulation.
+  #   prob: Logical (Default = `FALSE`). Controls whether the parameter values
+  #         represent the mean (`FALSE`) or a random value from an assigned
+  #         distribution. 
+  #
+  # Details:
+  #   Two parameters are assumed to have no uncertainty: LifeTables and Prices. 
+  #
+  # Returns:
+  #   A list of X elements, representing the sampled parameter values. 
+  
+  # Post-Operative Outcomes ===================================
+  #   Operative Mortality Rate (OMR) & Re-Revision Risk (RRR)
+  # Distribution: Beta
+  if (isTRUE(prob)) {
+    params$PostOp <- 
+      mapply(FUN = rbeta, 
+             shape1 = params$PostOp[, "events"],
+             shape2 = params$PostOp[, "N"] - params$PostOp[, "events"],
+             MoreArgs = list(n = 1),
+             SIMPLIFY = TRUE)
+  } else {
+    params$PostOp <- params$PostOp[, "events"]/params$PostOp[, "N"]
+  }
+  params <- c(params, as.list(params$PostOp))
+  params <- params[names(params) != "PostOp"]
+  
+  # Revision Risk (Survival) ===================================
+  # Distribution: Multivariate Normal
+  # Notes:
+  #   - Instead of using cholesky decomposition method like in Excel, we can
+  #     use the function for the required distribution from the MASS package.
+  #     This will be a faster implementation. 
+  if (isTRUE(prob)) {
+    # Check Alternatives (informs tolerance levels)
+    #   Lowest tolerance I could find for 2 or 3 alternatives.
+    tol_lvl <- c(j2 = 0.013, j3 = 0.0068)
+    # Use index positioning to determine which value of tol_lvl to use in
+    # MASS::mvrnorm().
+    tol_id <- length(grep(pattern = "NP",
+                          x = rownames(params$Survival$Survival),
+                          value = TRUE))
+    # Draw values
+    params$Survival <- 
+      MASS::mvrnorm(n = 1,
+                    mu = params$Survival$Survival[, "coef"],
+                    Sigma = params$Survival$CovMat,
+                    tol = tol_lvl[tol_id])
+  } else {
+    params$Survival <- params$Survival$Survival[, "coef"]
+  }
+  
+  # Costs: Markov States =====================================
+  # Distribution: GAMMA
+  if (isTRUE(prob)) {
+    # Method of moments to Prepare Distribution Parameters
+    mom_costs <- mom_params(Mean = params$Costs_States[, "Mean"],
+                            SE = params$Costs_States[, "SE"],
+                            dist = "gamma")
+    # Perform Random Draw
+    
+    params$Costs_States <- 
+      mapply(FUN = rgamma,
+             shape = mom_costs$shape,
+             rate = mom_costs$rate,
+             MoreArgs = list(n = 1),
+             SIMPLIFY = TRUE)
+    
+  } else {
+    params$Costs_States <- params$Costs_States[, "Mean"]
+  }
+  
+  # Utilities: Markov States ================================
+  # Distribution: Beta
+  if (isTRUE(prob)) {
+    # Method of Moments to Prepare Distribution Parameters
+    util_mom <- mom_params(Mean = params$Utilities[, "Mean"],
+                           SE = params$Utilities[, "SD"],
+                           dist = "beta")
+    # Perform Random Draw
+    params$Utilities <- 
+      mapply(FUN = rbeta,
+             shape1 = util_mom$shape1,
+             shape2 = util_mom$shape2,
+             MoreArgs = list(n = 1),
+             SIMPLIFY = TRUE)
+  } else {
+    params$Utilities <- params$Utilities[, "Mean"]
+  }
+  
   
   return(params)
 }
