@@ -1,15 +1,62 @@
-# 1) Define Transition Matrix (Q) ##############################################
+# Functions to execute the model organized into distinct steps. 
+calc_mortalityRisk <- function(LT, Age, Gender, nCycles = 60) {
+  # Calculate the Background (General Population) Mortality Risk
+  #
+  # Args:
+  #   LT: Numeric. Matrix of life table data by age-group and gender. Expects
+  #     The LifeTable element from the parameter list. 
+  #   Age: Numeric. The age at baseline for the simulated cohort. 
+  #   Gender: Character. The gender of the simulated cohort. 
+  #   nCycles: Numeric (Default = 60). The number of cycles (year) to include
+  #     in the simulation. 
+  #
+  # Returns:
+  #   A vector of length nCycles representing the background mortality risk
+  #   for the simulated cohort. 
+  
+  # Adjust Life Table Estimates
+  #   Life Table data represent the death rates by age and sex per 1,000 
+  #   population. These values must be divided by 1000 to get annual 
+  #   probabilities.
+  LT <- LT/1000
+  #   Modify the row names of LT to reflect the lower bound of each age range
+  #   Will aid in subsetting. 
+  rownames(x = LT) <- sub(pattern = "\\+|-\\d{2}",
+                          replacement = "",
+                          x = rownames(LT))
+  # Calculate Cohort Age
+  cohort_age <- Age + seq_len(length.out = nCycles)
+  # Identify Rows to Subset in LT
+  age_index <- findInterval(x = cohort_age,
+                            vec = as.numeric(rownames(LT)))
+  # Subset LT:
+  #   Rows by age_index to obtain age-specific mortality risks
+  #   Columns by Gender
+  risk_death <- LT[age_index, Gender]
+  risk_death <- unname(risk_death)
+  
+  return(risk_death)
+}
+
+# Define Transition Matrix (Q) ##############################################
 define_tmat <- function(j, 
                         ParamList, 
-                        nCycles = 60, 
-                        Gender) {
-  # Define Transition Matrix for a Specific Alternative
+                        OMR,
+                        RRR,
+                        Gender,
+                        Age,
+                        nCycles = 60) {
+  # Define Transition Matrix for a Specific Alternative, Age, and Gender
   #
   # Args:
   #   j: Character. The arm of the decision model. Accepted values include
   #     `"STD"`, `"NP1", or "NP2` (depending on configuration). 
   #   ParamList: List. A modified list of the input parameters. Expects the 
   #      output from the function calc_TimeDeps(). 
+  #   OMR: Numeric. The operative mortality risk. Expects the OMR element from
+  #      the parameter list. 
+  #   RRR: Numeric. The re-revision risk. Expects the RRR element from the 
+  #      parameter list. 
   #   nCycles: Numeric (Default = 60). The number of cycles to include in the 
   #     simulation. 
   #   Gender: Character. The gender of the simulated population. Accepted values
@@ -24,29 +71,36 @@ define_tmat <- function(j,
   Mstates <- c("PRI_THR", "PRI_Success", 
                "REV_THR", "REV_Success", "Death")
   
+  
+  # Calculate Intermediate Values ==============================================
+  # TODO: Background Mortality Risk 
+  p_mort <- 
+    calc_mortalityRisk(LT = LT, Age = Age, Gender = Gender, nCycles = nCycles)
+  # TODO: Revision Risk
+  
+  # Prepare Blank Transition Matrix
   Q <- array(data = 0, 
              dim = c(length(Mstates), length(Mstates), nCycles), 
              dimnames = list(Start = Mstates, End = Mstates, Cycle = NULL))
   
-  # Apply Transition Probabilities =============================================
+  # Calculate Transition Probabilities =========================================
   ## Start: Primary THR (PRI_THR)
-  Q["PRI_THR", "PRI_Success", ] <- 1 - ParamList$OMR[["PRI"]]
-  Q["PRI_THR", "Death", ] <- ParamList$OMR[["PRI"]]
+  Q["PRI_THR", "PRI_Success", ] <- 1 - OMR
+  Q["PRI_THR", "Death", ] <- OMR
   
   ## Start: Primary Success (PRI_Success)
-  Q["PRI_Success", "Death", ] <- ParamList$MR[, Gender]
+  Q["PRI_Success", "Death", ] <- p_mort
   Q["PRI_Success", "REV_THR", ] <- ParamList$RevisionRisk[,j,Gender]
   Q["PRI_Success", "PRI_Success", ] <- 
     1 - colSums(x = Q["PRI_Success", , ], na.rm = FALSE, dims = 1)
   
   ## Start: Revision THR (REV_THR)
-  Q["REV_THR", "Death", ] <- ParamList$OMR[["REV"]] + ParamList$MR[, Gender]
-  Q["REV_THR", "REV_Success", ] <- 
-    1 - (ParamList$OMR[["REV"]] + ParamList$MR[,Gender])
+  Q["REV_THR", "Death", ] <- OMR + p_mort
+  Q["REV_THR", "REV_Success", ] <- 1 - (OMR + p_mort)
   
   ## Start: Revision Success (REV_Success)
-  Q["REV_Success", "REV_THR", ] <- ParamList$RRR
-  Q["REV_Success", "Death", ] <- ParamList$MR[,Gender]
+  Q["REV_Success", "REV_THR", ] <- RRR
+  Q["REV_Success", "Death", ] <- p_mort
   Q["REV_Success", "REV_Success", ] <- 
     1 - colSums(x = Q["REV_Success", , ], na.rm = FALSE, dims = 1)
   
