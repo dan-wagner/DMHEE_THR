@@ -8,11 +8,25 @@ getParams <- function(FileName = "params.rds", include_NP2 = FALSE) {
   #     considers 2 (Default) or 3 alternatives. 
   #
   # Returns:
-  #   A list with X named elements. 
-  #     {A}. 
-  #     {B}. 
-  #     {C}. 
-  #     {D}. 
+  #   A list with 6 named elements. 
+  #     LifeTables: 
+  #       A matrix with Age and Gender specified mortality risks from the UK. 
+  #     PostOp:
+  #       A matrix summarizing post-operative outcomes relevant to the model. 
+  #       OMR = Operative Mortality Rate (deaths following surgery); RRR = 
+  #       Re-Revision Risk (patients with need for a revision surgery within 1
+  #       year of prior surgery). 
+  #     Survival (Revision Risk):
+  #       A list with two elements: 
+  #         Survival: A matrix of the fitted regression coefficients from a 
+  #         parametric survival model following a weibull distribution. 
+  #         CovMat: The covariance matrix of the fitted regression coefficients.
+  #     Utilities:
+  #       A matrix of the state specific utility values. 
+  #     Costs_States:
+  #       A matrix summarizing the annual costs within each health state. 
+  #     Prices:
+  #       A named vector of the unit prices for each prosthesis. 
   
   # Set Path to output file
   param_path <- file.path("data", "data-gen", "Model-Params", FileName)
