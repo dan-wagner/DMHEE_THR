@@ -150,7 +150,15 @@ draw_params <- function(params, prob = FALSE) {
   #   Two parameters are assumed to have no uncertainty: LifeTables and Prices. 
   #
   # Returns:
-  #   A list of X elements, representing the sampled parameter values. 
+  #   A list of the sampled parameter values, comprised of 7 elements:
+  #     Costs_States: Sampled health state costs. 
+  #     LifeTables: Age and gender specific general population mortality risks.
+  #     OMR: The operative mortality rate. 
+  #     Prices: Unit prices for the comparators to be considered in the model.
+  #     RRR: The re-revision risk (second or greater revision procedure).
+  #     Survival: Sampled parameters for the parametric survival function of 
+  #       which will predict the revision risk. 
+  #     Utilities: Health State Utility values. 
   
   # Post-Operative Outcomes ===================================
   #   Operative Mortality Rate (OMR) & Re-Revision Risk (RRR)
