@@ -155,32 +155,48 @@ track_cohort <- function(Q, nStart = 1000) {
 }
 
 # Estimate Costs (Costs) #######################################################
-cost_cohort <- function(trace, 
-                        Cost_j, 
-                        Cost_States, 
-                        cDR = 0.06,
-                        nStart = 1000) {
-  # Cost at Cycle = 0, all patients in PRI_THR
-  Cost0 <- (Cost_j + Cost_States[["PRI_THR"]])*nStart
+est_costs <- function(j,
+                      trace,
+                      Price,
+                      Cost_States,
+                      cDR = 0.06,
+                      n_cohort = 1000){
+  # Estimate Costs for the Simulated Cohort
+  # 
+  # Args:
+  #   j: Character. The name of the prosthesis of interest.
+  #   trace: Numeric. The estimates of state occupancy generated from the cohort
+  #     simulation. 
+  #   Price: Numeric. The unit price of the alternative prostheses.
+  #   Cost_States: Numeric. The annual costs for patients in each health state.
+  #     Expects the `"Costs_States"` element from the parameter list.
+  #   cDR: Numeric. The discount rate to apply to costs.
+  #   n_cohort: Numeric (Default = 1000). The size of the simulated cohort.
+  #
+  # Returns:
+  #   A numeric vector whose length will match the same number of rows in the
+  #   cohort trace. Values represent the discounted costs per-cycle for the
+  #   simulated cohort. 
   
-  # Estimate Costs for each Cycle and Health State
-  StateCosts <- 
-    replicate(n = nrow(trace), 
-              expr = Cost_States, simplify = TRUE) |> 
-    t()
+  # Identify alive states
+  alive_states <- !colnames(trace) %in% "Death"
+  # Calculate Acquisition Costs
+  acquisition <- n_cohort * Price[[j]]
+  # Calculate Monitoring/Follow-Up Costs
+  #   By Cycle and State
+  state_costs <- 
+    t(apply(X = trace[, alive_states], MARGIN = 1, FUN = `*`, Cost_States))
+  #   Sum Across States
+  state_costs <- rowSums(x = state_costs, na.rm = FALSE, dims = 1L)
   
-  StateCosts <- 
-    (trace[,!colnames(trace) %in% "Death"] * StateCosts) |> 
-    rowSums(na.rm = FALSE, dims = 1)
+  # Calculate Total Costs
+  total_costs <- state_costs
+  total_costs[1] <- total_costs[1] + acquisition
+  # Discount Values
+  yrs <- 1:nrow(trace)
+  total_costs <- total_costs/((1 + cDR)^yrs)
   
-  ## Discount StateCosts
-  StateCosts <- StateCosts/((1+cDR)^(1:nrow(trace)))
-  
-  # Combine Initial and Cycle Costs
-  Costs <- c(Cost0, StateCosts)
-  
-  # Return Output
-  return(Costs)
+  return(total_costs)
 }
 
 # Estimate Effects #############################################################
@@ -259,7 +275,7 @@ runModel <- function(j,
                    Survival = ParamList$Survival,
                    OMR = ParamList$OMR,
                    RRR = ParamList$RRR,
-                   Gender = "Male",
+                   Gender = Gender,
                    LifeTables = ParamList$LifeTables,
                    Age = 60,
                    nCycles = 60)
@@ -268,11 +284,11 @@ runModel <- function(j,
   trace <- track_cohort(Q = Q, nStart = 1000)
   
   # Estimate Costs (Costs)
-  Costs <- cost_cohort(trace = trace, 
-                       Cost_j = ParamList$Prices[[j]], 
-                       Cost_States = ParamList$Costs_States, 
-                       cDR = cDR,
-                       nStart = 1000)
+  Costs <- est_costs(j = j,
+                     trace = trace,
+                     Cost_States = ParamList$Costs_States,
+                     cDR = cDR,
+                     n_cohort = 1000)
   
   # Estimate Effects (Effects: LYs/QALYs) 
   Effects <- effects_cohort(trace = trace, 
