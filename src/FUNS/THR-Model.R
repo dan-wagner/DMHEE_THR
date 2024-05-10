@@ -1,5 +1,5 @@
 # Functions to execute the model organized into distinct steps. 
-calc_mortalityRisk <- function(LT, Age, Gender, nCycles = 60) {
+calc_mortalityRisk <- function(LT, Age, Gender, n_cycles = 60) {
   # Calculate the Background (General Population) Mortality Risk
   #
   # Args:
@@ -7,11 +7,11 @@ calc_mortalityRisk <- function(LT, Age, Gender, nCycles = 60) {
   #     The LifeTable element from the parameter list. 
   #   Age: Numeric. The age at baseline for the simulated cohort. 
   #   Gender: Character. The gender of the simulated cohort. 
-  #   nCycles: Numeric (Default = 60). The number of cycles (year) to include
+  #   n_cycles: Numeric (Default = 60). The number of cycles (year) to include
   #     in the simulation. 
   #
   # Returns:
-  #   A vector of length nCycles representing the background mortality risk
+  #   A vector of length n_cycles representing the background mortality risk
   #   for the simulated cohort. 
   
   # Adjust Life Table Estimates
@@ -25,7 +25,7 @@ calc_mortalityRisk <- function(LT, Age, Gender, nCycles = 60) {
                           replacement = "",
                           x = rownames(LT))
   # Calculate Cohort Age
-  cohort_age <- Age + seq_len(length.out = nCycles)
+  cohort_age <- Age + seq_len(length.out = n_cycles)
   # Identify Rows to Subset in LT
   age_index <- findInterval(x = cohort_age,
                             vec = as.numeric(rownames(LT)))
@@ -46,7 +46,7 @@ define_tmat <- function(j,
                         LifeTables,
                         Gender,
                         Age,
-                        nCycles = 60) {
+                        n_cycles = 60) {
   # Define Transition Matrix for a Specific Alternative, Age, and Gender
   #
   # Args:
@@ -59,7 +59,7 @@ define_tmat <- function(j,
   #      the parameter list. 
   #   RRR: Numeric. The re-revision risk. Expects the RRR element from the 
   #      parameter list. 
-  #   nCycles: Numeric (Default = 60). The number of cycles to include in the 
+  #   n_cycles: Numeric (Default = 60). The number of cycles to include in the 
   #     simulation. 
   #   Gender: Character. The gender of the simulated population. Accepted values
   #     include `"Male"` or `"Female"`. 
@@ -80,17 +80,17 @@ define_tmat <- function(j,
   p_mort <- calc_mortalityRisk(LT = LifeTables,
                                Age = Age,
                                Gender = Gender,
-                               nCycles = nCycles)
+                               n_cycles = n_cycles)
   # revision_free
   revision_free <- 
     extrapolate_survival(coefs = Survival,
                          age = Age,
                          male = ifelse(Gender == "Male", 1, 0),
-                         n_cycles = nCycles)
+                         n_cycles = n_cycles)
   
   # Prepare Blank Transition Matrix
   Q <- array(data = 0, 
-             dim = c(length(Mstates), length(Mstates), nCycles), 
+             dim = c(length(Mstates), length(Mstates), n_cycles), 
              dimnames = list(Start = Mstates, End = Mstates, Cycle = NULL))
   
   # Calculate Transition Probabilities =========================================
@@ -236,7 +236,7 @@ runModel <- function(j,
                      ParamList,
                      Age0 = 60, 
                      Gender = "Female",
-                     nCycles = 60, 
+                     n_cycles = 60, 
                      cDR = 0.06, 
                      oDR = 0.015) {
   # Estimate Costs and Benefits for a Single Alternative
@@ -248,7 +248,7 @@ runModel <- function(j,
   #     from the function DrawParams(). 
   #   Age0: Numeric. The age of the simulated cohort at baseline. 
   #   Gender: Character. The gender of the simulated cohort. 
-  #   nCycles: Numeric (integer). Refers to the total number of cycles (years)
+  #   n_cycles: Numeric (integer). Refers to the total number of cycles (years)
   #     in the cohort simulation. Default = 60 (base case). 
   #   cDR: Numeric (Default = 0.06). The discount rate to apply to costs. 
   #   oDR: Numeric (Default = 0.015). The discount rate to apply to benefits. 
@@ -278,7 +278,7 @@ runModel <- function(j,
                    Gender = Gender,
                    LifeTables = ParamList$LifeTables,
                    Age = 60,
-                   nCycles = 60)
+                   n_cycles = 60)
   
   # Track Cohort (trace)
   trace <- track_cohort(Q = Q, n_cohort = 1000)
