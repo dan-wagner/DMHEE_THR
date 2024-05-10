@@ -200,16 +200,15 @@ est_costs <- function(j,
 }
 
 # Estimate Effects #############################################################
-effects_cohort <- function(trace, 
-                           State_Util, 
-                           oDR = 0.015) {
+est_effects <- function(trace, Utility, oDR = 0.015) {
   # Estimate Effects for the Cohort Simulation
   # 
   # Args:
   #   trace: Numeric. A matrix representing the simulated cohort's state 
   #     occupancy over time. 
-  #   State_Util: Numeric. A vector of the health state utility values. 
+  #   Utility: Numeric. A vector of the health state utility values. 
   #   oDR: Numeric. The discount rate to apply to effects. 
+  #
   # Returns:
   #   A matrix of estimated model outcomes in each cycle of the simulation. 
   #   Columns represent LYs and QALYs. Rows represent cycles. 
@@ -220,13 +219,14 @@ effects_cohort <- function(trace,
   # Calculate Life Years
   LYs <- rowSums(x = trace[, alive_states], na.rm = FALSE, dims = 1)
   # Calculate QALYs
-  QALYs <- apply(X = trace[, alive_states], MARGIN = 1, FUN = `*`, State_Util)
+  QALYs <- apply(X = trace[, alive_states], MARGIN = 1, FUN = `*`, Utility)
   QALYs <- colSums(x = QALYs, na.rm = FALSE, dims = 1L)
   
   # Combine Results
   Effects <- cbind(LYs = LYs, QALYs = QALYs)
   ## Discount Effects
-  Effects <- Effects/((1+oDR)^(1:nrow(trace)))
+  yrs <- 1:nrow(trace)
+  Effects <- Effects/((1+oDR)^yrs)
   
   return(Effects)
 }
@@ -292,7 +292,7 @@ runModel <- function(j,
   
   # Estimate Effects (Effects: LYs/QALYs) 
   Effects <- effects_cohort(trace = trace, 
-                            State_Util = ParamList$Utilities, 
+                            Utility = ParamList$Utilities, 
                             oDR = oDR)
   
   # Assemble Results
