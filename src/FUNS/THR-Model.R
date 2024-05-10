@@ -40,9 +40,10 @@ calc_mortalityRisk <- function(LT, Age, Gender, nCycles = 60) {
 
 # Define Transition Matrix (Q) ##############################################
 define_tmat <- function(j, 
-                        ParamList, 
+                        Survival, 
                         OMR,
                         RRR,
+                        LifeTables,
                         Gender,
                         Age,
                         nCycles = 60) {
@@ -50,9 +51,10 @@ define_tmat <- function(j,
   #
   # Args:
   #   j: Character. The arm of the decision model. Accepted values include
-  #     `"STD"`, `"NP1", or "NP2` (depending on configuration). 
-  #   ParamList: List. A modified list of the input parameters. Expects the 
-  #      output from the function calc_TimeDeps(). 
+  #     `"STD"`, `"NP1", or "NP2` (depending on configuration).
+  #   Survival: Numeric. A vector of coefficients from the parametric surival
+  #     model to capture time-to-revision. Expects the "Survival" element from
+  #     the parameter list.  
   #   OMR: Numeric. The operative mortality risk. Expects the OMR element from
   #      the parameter list. 
   #   RRR: Numeric. The re-revision risk. Expects the RRR element from the 
@@ -61,9 +63,11 @@ define_tmat <- function(j,
   #     simulation. 
   #   Gender: Character. The gender of the simulated population. Accepted values
   #     include `"Male"` or `"Female"`. 
+  #   LifeTables: Numeric. Matrix of life table data by age-group and gender. 
+  #     Expects the LifeTables element from the parameter list. 
   #
   # Returns:
-  #   A 3-dimensional array representing the transition probabiltiies for the 
+  #   A 3-dimensional array representing the transition probabilities for the 
   #   specified configuration. Rows represent the start state, columns represent
   #   the end state, and the matrices represent each cycle of the simulation. 
   
@@ -71,12 +75,18 @@ define_tmat <- function(j,
   Mstates <- c("PRI_THR", "PRI_Success", 
                "REV_THR", "REV_Success", "Death")
   
-  
   # Calculate Intermediate Values ==============================================
-  # TODO: Background Mortality Risk 
-  p_mort <- 
-    calc_mortalityRisk(LT = LT, Age = Age, Gender = Gender, nCycles = nCycles)
-  # TODO: Revision Risk
+  # Background Mortality Risk 
+  p_mort <- calc_mortalityRisk(LT = LifeTables,
+                               Age = Age,
+                               Gender = Gender,
+                               nCycles = nCycles)
+  # revision_free
+  revision_free <- 
+    extrapolate_survival(coefs = Survival,
+                         age = Age,
+                         male = ifelse(Gender == "Male", 1, 0),
+                         n_cycles = nCycles)
   
   # Prepare Blank Transition Matrix
   Q <- array(data = 0, 
@@ -85,27 +95,21 @@ define_tmat <- function(j,
   
   # Calculate Transition Probabilities =========================================
   ## Start: Primary THR (PRI_THR)
-  Q["PRI_THR", "PRI_Success", ] <- 1 - OMR
-  Q["PRI_THR", "Death", ] <- OMR
+  Q["PRI_THR", "PRI_Success", ] <- 1 - (OMR + p_mort)
   
   ## Start: Primary Success (PRI_Success)
-  Q["PRI_Success", "Death", ] <- p_mort
-  Q["PRI_Success", "REV_THR", ] <- ParamList$RevisionRisk[,j,Gender]
-  Q["PRI_Success", "PRI_Success", ] <- 
-    1 - colSums(x = Q["PRI_Success", , ], na.rm = FALSE, dims = 1)
+  Q["PRI_Success", "REV_THR", ] <- (1 - revision_free[, j]) * (1 - p_mort)
+  Q["PRI_Success", "PRI_Success", ] <- revision_free[, j] * (1 - p_mort)
   
   ## Start: Revision THR (REV_THR)
-  Q["REV_THR", "Death", ] <- OMR + p_mort
   Q["REV_THR", "REV_Success", ] <- 1 - (OMR + p_mort)
   
   ## Start: Revision Success (REV_Success)
-  Q["REV_Success", "REV_THR", ] <- RRR
-  Q["REV_Success", "Death", ] <- p_mort
-  Q["REV_Success", "REV_Success", ] <- 
-    1 - colSums(x = Q["REV_Success", , ], na.rm = FALSE, dims = 1)
+  Q["REV_Success", "REV_THR", ] <- RRR * (1 - p_mort)
+  Q["REV_Success", "REV_Success", ] <- (1 - RRR) * (1 - p_mort)
   
-  ## Death is Absorbing State
-  Q["Death", "Death", ] <- 1
+  # Transitions to Death State
+  Q[, "Death", ] <- 1 - apply(X = Q, MARGIN = c("Start", "Cycle"), FUN = sum)
   
   return(Q)
 }
@@ -183,19 +187,28 @@ cost_cohort <- function(trace,
 effects_cohort <- function(trace, 
                            State_Util, 
                            oDR = 0.015) {
-  # Estimate Life Years
-  LYs <- rowSums(x = trace[, !colnames(trace) %in% "Death"], 
-                 na.rm = FALSE, 
-                 dims = 1)
-  # Estimate Utilities
-  Utilities <- trace[, !colnames(trace) %in% "Death"]
-  for (i in seq_along(1:nrow(Utilities))) {
-    Utilities[i,] <- Utilities[i,] * State_Util
-  }
-  Utilities <- rowSums(x = Utilities, na.rm = FALSE, dims = 1)
+  # Estimate Effects for the Cohort Simulation
+  # 
+  # Args:
+  #   trace: Numeric. A matrix representing the simulated cohort's state 
+  #     occupancy over time. 
+  #   State_Util: Numeric. A vector of the health state utility values. 
+  #   oDR: Numeric. The discount rate to apply to effects. 
+  # Returns:
+  #   A matrix of estimated model outcomes in each cycle of the simulation. 
+  #   Columns represent LYs and QALYs. Rows represent cycles. 
+  
+  # Identify alive states
+  alive_states <- !colnames(trace) %in% "Death"
+  
+  # Calculate Life Years
+  LYs <- rowSums(x = trace[, alive_states], na.rm = FALSE, dims = 1)
+  # Calculate QALYs
+  QALYs <- apply(X = trace[, alive_states], MARGIN = 1, FUN = `*`, State_Util)
+  QALYs <- colSums(x = QALYs, na.rm = FALSE, dims = 1L)
   
   # Combine Results
-  Effects <- cbind(LYs = LYs, QALYs = Utilities)
+  Effects <- cbind(LYs = LYs, QALYs = QALYs)
   ## Discount Effects
   Effects <- Effects/((1+oDR)^(1:nrow(trace)))
   
@@ -241,24 +254,23 @@ runModel <- function(j,
   j <- match.arg(arg = j, choices = c("STD", "NP1", "NP2"))
   Gender <- match.arg(arg = Gender, choices = c("Male", "Female"))
   
-  # Modify Parameters: Time-Dependencies 
-  ParamList <- calc_TimeDeps(ParamList = ParamList, 
-                             Age0 = Age0, 
-                             nCycles = nCycles)
-  
   # Build Transition Matrix (Q)
-  Q <- define_tmat(ParamList = ParamList, 
-                   j = j, 
-                   Gender = Gender, 
-                   nCycles = nCycles)
+  Q <- define_tmat(j = "STD",
+                   Survival = ParamList$Survival,
+                   OMR = ParamList$OMR,
+                   RRR = ParamList$RRR,
+                   Gender = "Male",
+                   LifeTables = ParamList$LifeTables,
+                   Age = 60,
+                   nCycles = 60)
   
   # Track Cohort (trace)
-  trace <- track_cohort(Q = Q, nCycles = nCycles, nStart = 1000)
+  trace <- track_cohort(Q = Q, nStart = 1000)
   
   # Estimate Costs (Costs)
   Costs <- cost_cohort(trace = trace, 
-                       Cost_j = ParamList$Cost_j[[j]], 
-                       Cost_States = ParamList$Cost_States, 
+                       Cost_j = ParamList$Prices[[j]], 
+                       Cost_States = ParamList$Costs_States, 
                        cDR = cDR,
                        nStart = 1000)
   
