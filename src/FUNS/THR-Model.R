@@ -237,6 +237,7 @@ runModel <- function(j,
                      Age0 = 60, 
                      Gender = "Female",
                      n_cycles = 60, 
+                     n_cohort = 1000,
                      cDR = 0.06, 
                      oDR = 0.015) {
   # Estimate Costs and Benefits for a Single Alternative
@@ -250,6 +251,7 @@ runModel <- function(j,
   #   Gender: Character. The gender of the simulated cohort. 
   #   n_cycles: Numeric (integer). Refers to the total number of cycles (years)
   #     in the cohort simulation. Default = 60 (base case). 
+  #   n_cohort: Numeric (Default = 1000). The size of the simulated cohort. 
   #   cDR: Numeric (Default = 0.06). The discount rate to apply to costs. 
   #   oDR: Numeric (Default = 0.015). The discount rate to apply to benefits. 
   #
@@ -261,7 +263,7 @@ runModel <- function(j,
   #      horizon. 
   #   3) Estimate benefits
   #   4) Estimate costs. 
-  #   5) Discont costs and benefits, then calculate totals over simulated time
+  #   5) Discount costs and benefits, then calculate totals over simulated time
   #      horizon. 
   #
   # Returns:
@@ -281,7 +283,7 @@ runModel <- function(j,
                    n_cycles = 60)
   
   # Track Cohort (trace)
-  trace <- track_cohort(Q = Q, n_cohort = 1000)
+  trace <- track_cohort(Q = Q, n_cohort = n_cohort)
   
   # Estimate Costs (Costs)
   Costs <- est_costs(j = j,
@@ -289,7 +291,7 @@ runModel <- function(j,
                      Price = ParamList$Prices,
                      Cost_States = ParamList$Costs_States,
                      cDR = cDR,
-                     n_cohort = 1000)
+                     n_cohort = n_cohort)
   
   # Estimate Effects (Effects: LYs/QALYs) 
   Effects <- est_effects(trace = trace, 
@@ -298,8 +300,8 @@ runModel <- function(j,
   
   # Assemble Results
   ## Calculate Total Per-Patient Costs & Effects
-  Costs <- sum(Costs)/1000
-  Effects <- colSums(x = Effects, na.rm = FALSE, dims = 1)/1000
+  Costs <- sum(Costs)/n_cohort
+  Effects <- colSums(x = Effects, na.rm = FALSE, dims = 1)/n_cohort
   ## Combine Results
   Result <- c(Costs = Costs, Effects)
   
