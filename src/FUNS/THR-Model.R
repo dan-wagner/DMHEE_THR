@@ -139,7 +139,7 @@ track_cohort <- function(Q, n_cohort = 1000) {
                  dimnames = list(Cycle = NULL, 
                                  State = states))
   # Set Membership for Cycle 0
-  cohort_init <- c(nStart, rep(0, 4))
+  cohort_init <- c(n_cohort, rep(0, 4))
   names(cohort_init) <- colnames(Q)
   
   # Populate Cohort Trace
@@ -286,14 +286,15 @@ runModel <- function(j,
   # Estimate Costs (Costs)
   Costs <- est_costs(j = j,
                      trace = trace,
+                     Price = ParamList$Prices,
                      Cost_States = ParamList$Costs_States,
                      cDR = cDR,
                      n_cohort = 1000)
   
   # Estimate Effects (Effects: LYs/QALYs) 
-  Effects <- effects_cohort(trace = trace, 
-                            Utility = ParamList$Utilities, 
-                            oDR = oDR)
+  Effects <- est_effects(trace = trace, 
+                         Utility = ParamList$Utilities, 
+                         oDR = oDR)
   
   # Assemble Results
   ## Calculate Total Per-Patient Costs & Effects
