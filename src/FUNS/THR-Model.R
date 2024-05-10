@@ -115,13 +115,13 @@ define_tmat <- function(j,
 }
 
 # 2) Track Cohort (trace) ######################################################
-track_cohort <- function(Q, nStart = 1000) {
+track_cohort <- function(Q, n_cohort = 1000) {
   # Generate the Cohort Trace for the Economic Model
   #
   # Args:
   #   Q: Numeric. A 3-dimensional array representing the time-dependent 
   #      transition probabilities. 
-  #   nStart: Numeric. The total size of the cohort to simulate. 
+  #   n_cohort: Numeric (Default = 1000). The size of the simulated cohort. 
   #
   # Returns:
   #   An array with 2 dimensions (i.e. matrix). Rows represent the cycle of the 
@@ -281,7 +281,7 @@ runModel <- function(j,
                    nCycles = 60)
   
   # Track Cohort (trace)
-  trace <- track_cohort(Q = Q, nStart = 1000)
+  trace <- track_cohort(Q = Q, n_cohort = 1000)
   
   # Estimate Costs (Costs)
   Costs <- est_costs(j = j,
