@@ -1,10 +1,10 @@
 # Functions to execute the model organized into distinct steps. 
-calc_mortalityRisk <- function(LT, Age, Gender, n_cycles = 60) {
+calc_mortalityRisk <- function(LifeTable, Age, Gender, n_cycles = 60) {
   # Calculate the Background (General Population) Mortality Risk
   #
   # Args:
-  #   LT: Numeric. Matrix of life table data by age-group and gender. Expects
-  #     The LifeTable element from the parameter list. 
+  #   LifeTable: Numeric. Matrix of life table data by age-group and gender. 
+  #     Expects the LifeTable element from the parameter list. 
   #   Age: Numeric. The age at baseline for the simulated cohort. 
   #   Gender: Character. The gender of the simulated cohort. 
   #   n_cycles: Numeric (Default = 60). The number of cycles (year) to include
@@ -18,21 +18,21 @@ calc_mortalityRisk <- function(LT, Age, Gender, n_cycles = 60) {
   #   Life Table data represent the death rates by age and sex per 1,000 
   #   population. These values must be divided by 1000 to get annual 
   #   probabilities.
-  LT <- LT/1000
+  LifeTable <- LifeTable/1000
   #   Modify the row names of LT to reflect the lower bound of each age range
   #   Will aid in subsetting. 
-  rownames(x = LT) <- sub(pattern = "\\+|-\\d{2}",
+  rownames(x = LifeTable) <- sub(pattern = "\\+|-\\d{2}",
                           replacement = "",
-                          x = rownames(LT))
+                          x = rownames(LifeTable))
   # Calculate Cohort Age
   cohort_age <- Age + seq_len(length.out = n_cycles)
   # Identify Rows to Subset in LT
   age_index <- findInterval(x = cohort_age,
-                            vec = as.numeric(rownames(LT)))
+                            vec = as.numeric(rownames(LifeTable)))
   # Subset LT:
   #   Rows by age_index to obtain age-specific mortality risks
   #   Columns by Gender
-  risk_death <- LT[age_index, Gender]
+  risk_death <- LifeTable[age_index, Gender]
   risk_death <- unname(risk_death)
   
   return(risk_death)
@@ -43,7 +43,7 @@ define_tmat <- function(j,
                         Survival, 
                         OMR,
                         RRR,
-                        LifeTables,
+                        LifeTable,
                         Gender,
                         Age,
                         n_cycles = 60) {
@@ -77,7 +77,7 @@ define_tmat <- function(j,
   
   # Calculate Intermediate Values ==============================================
   # Background Mortality Risk 
-  p_mort <- calc_mortalityRisk(LT = LifeTables,
+  p_mort <- calc_mortalityRisk(LifeTable = LifeTable,
                                Age = Age,
                                Gender = Gender,
                                n_cycles = n_cycles)
@@ -271,12 +271,12 @@ runModel <- function(j,
   Gender <- match.arg(arg = Gender, choices = c("Male", "Female"))
   
   # Build Transition Matrix (Q)
-  Q <- define_tmat(j = "STD",
+  Q <- define_tmat(j = j,
                    Survival = ParamList$Survival,
                    OMR = ParamList$OMR,
                    RRR = ParamList$RRR,
                    Gender = Gender,
-                   LifeTables = ParamList$LifeTables,
+                   LifeTable = ParamList$LifeTables,
                    Age = 60,
                    n_cycles = 60)
   
