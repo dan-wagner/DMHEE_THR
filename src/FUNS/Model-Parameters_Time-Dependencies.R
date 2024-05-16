@@ -84,37 +84,3 @@ extrapolate_survival <- function(coefs,
   # return result
   return(p_survival)
 }
-
-# Modify Parameter List: Insert Time-Dependencies ==============================
-calc_TimeDeps <- function(ParamList, 
-                          Age0 = 60, 
-                          nCycles = 60) {
-  # Mortality Risk for Age and Gender
-  ParamList$MR <- calc_MR(LT = ParamList$LifeTables, 
-                          Age0 = Age0, 
-                          nCycles = nCycles)
-  
-  # Revision Risk stratified by j, Age and Gender
-  ParamList$RevisionRisk <- 
-    sapply(X = list(Male = 1, Female = 0), 
-           FUN = extrapolate_survival, 
-           coefs = ParamList$Survival, 
-           age = Age0, 
-           n_cycles = nCycles, 
-           simplify = "array")
-  ParamList$RevisionRisk <- 1 - ParamList$RevisionRisk
-  
-  names(dimnames(ParamList$RevisionRisk)) <- c("Cycle", "j", "Gender")
-  
-  # Arrange List, drop un-necessary list-elements: LifeTables, Survival
-  ParamList <- ParamList[c("OMR", 
-                           "RRR", 
-                           "MR", 
-                           "RevisionRisk", 
-                           "Cost_j", 
-                           "Cost_States", 
-                           "Utilities")]
-  
-  
-  return(ParamList)
-}
