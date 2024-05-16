@@ -1,103 +1,89 @@
-# Conduct Monte Carlo Simulation of THR Cohort Model
+# Nested Monte Carlo Simulation for EVPPI
+#   PHI: OMR (Operative Mortality Rate)
+#   Model with three alternatives: STD, NP1, NP2
 
+# Setup ========================================================================
+#   Load Functions -------------------------------------------------------------
 source(file = file.path("src", "FUNS", "Model-Parameters.R"))
 source(file = file.path("src", "FUNS", "Model-Parameters_Time-Dependencies.R"))
-source(file = file.path("src", "FUNS", "Model-Parameters_Draws.R"))
 source(file = file.path("src", "FUNS", "THR-Model.R"))
 
-# Get Model Parameters =========================================================
-getParams(include_NP2 = TRUE)
-THR_Params <- readr::read_rds(file = file.path("data", 
-                                               "data-gen", 
-                                               "Model-Params", 
-                                               "THR-Params_j3.rds"))
+library(foreach)
+library(doParallel) 
 
-# Run Simulation ===============================================================
+#   Load Simulation Parameters -------------------------------------------------
+sim_params <- getParams(include_NP2 = TRUE)
+
+# Execute Simulation ===========================================================
+# Analysis strategy involves 6 separate scenario analyses:
+#   - Female: Age 40, 60, 80
+#   - Male: Age 40, 60, 80
+# Instead of running each analysis separately, they can be executed in a 
+# single function call. The output can be stored in an array. 
+
+# Define Functional Variables --------------------------------------------------
+# Values which nested functions will iterate over. 
+cohort_age <- seq(from = 40, to = 80, by = 20)
+names(cohort_age) <- cohort_age
+cohort_sex <- c(Male = "Male", Female = "Female")
+j <- c(STD = "STD", NP1 = "NP1", NP2 = "NP2")
+
+# Configure Parallel Execution -------------------------------------------------
+n_cores <- detectCores()/2 # Half of available clusters
+cl <- makeCluster(n_cores)
+registerDoParallel(cl = cl)
+
+# Assign Parameter of Interest (PHI) -------------------------------------------
 PHI <- "OMR"
 
-THR.Age <- seq(from = 40, to = 80, by = 20)
-THR.Gender <- c("Male", "Female")
-names(THR.Age) <- THR.Age
-names(THR.Gender) <- THR.Gender
-
-library(foreach)
-library(doParallel)
-registerDoParallel(cores = 6)
-
-Sim.Start <- Sys.time()
-
-NMCOut <- 
-  foreach(n = 1:1000, 
-          .final = simplify2array) %dopar% {
-    # Draw Outer Loop Parameter
-    PHI_i <- DrawParams(ParamList = THR_Params, prob = 1)[PHI]
-    
-    
-    replicate(n = 1000, 
+# Nested Monte Carlo Simulation ------------------------------------------------
+sim_out <- 
+  foreach(i = 1:1000, .final = simplify2array) %dopar% {
+    # Draw Outer Loop Parameter (PHI)
+    PHI_i <- draw_params(params = sim_params)[PHI]
+    # Initiate Inner Loop
+    replicate(n = 1000,
               expr = {
-                PSI_i <- DrawParams(ParamList = THR_Params, prob = 1)
+                # Draw Inner Loop Parameters (PSI)
+                PSI_i <- draw_params(params = sim_params, prob = TRUE)
+                # Fix the value of PHI to the corresponding element of PSI
                 PSI_i[PHI] <- PHI_i
-                
-                Result <- 
-                  sapply(X = THR.Age, 
-                         FUN = \(age){
-                           sapply(X = THR.Gender, 
-                                  FUN = \(sex){
-                                    sapply(X = list(STD = "STD", 
-                                                    NP1 = "NP1", 
-                                                    NP2 = "NP2"), 
-                                           FUN = runModel, 
-                                           ParamList = PSI_i, 
-                                           Age0 = age, 
-                                           Gender = sex, 
-                                           nCycles = 60, 
-                                           cDR = 0.06, 
-                                           oDR = 0.015, 
-                                           simplify = "array")
-                                  }, 
+                # Run Model
+                result_i <- 
+                  sapply(X = cohort_age, 
+                         FUN = \(age) {
+                           sapply(X = cohort_sex,
+                                  FUN = \(sex) {
+                                    sapply(X = j,
+                                           FUN = runModel,
+                                           ParamList = PSI_i,
+                                           Age0 = age,
+                                           Gender = sex,
+                                           n_cycles = 60,
+                                           n_cohort = 1000,
+                                           cDR = 0.06,
+                                           oDR = 0.015)
+                                  },
                                   simplify = "array")
                          }, 
                          simplify = "array")
                 
-                names(dimnames(Result)) <- c("Results", "j", "Gender", "Age")
-                Result
-              })
+                names(dimnames(result_i)) <- c("Result", "j", "Gender", "Age")
+                result_i
+              }, 
+              simplify = "array")
   }
+stopCluster(cl = cl)
 
-Sim.Stop <- Sys.time()
+# Add Missing Dimnames
+names(dimnames(sim_out))[5:6] <- c("PSI", "PHI")
+sim_out <- aperm(a = sim_out, 
+                 perm = c("PSI", "Result", "j", "PHI", "Gender", "Age"))
 
-stopCluster()
-
-str(NMCOut)
-
-NoDimName <- which(names(dimnames(NMCOut)) == "")
-
-names(dimnames(NMCOut))[NoDimName] <- c("PSI", "PHI") 
-NMCOut <- aperm(a = NMCOut, perm = c("PSI", "Results", "j", "PHI", "Gender", "Age"))
-
-Sim.Stop - Sim.Start
-
-## Save Output to data-gen 
-names(THR.Gender) <- c("M", "F")
-
-for (sex in seq_along(THR.Gender)) {
-  for (age in seq_along(THR.Age)) {
-    
-    Result.Data <- NMCOut[,,,,THR.Gender[[sex]],names(THR.Age)[[age]]]
-    
-    Result.PATH <- 
-    file.path("data", 
-              "data-gen", 
-              "Simulation-Output", 
-              "02_STD-v-NP1-v-NP2", 
-              paste("Nested", 
-                    "MC-Sim", 
-                    paste0(names(THR.Gender)[sex], 
-                           names(THR.Age)[age]), 
-                    "OMR.rds", sep = "_"))
-    
-    readr::write_rds(x = Result.Data, 
-                     file = Result.PATH)
-    
-  }
-}
+# Write Data to Disk ===========================================================
+readr::write_rds(x = sim_out, 
+                 file = file.path("data", 
+                                  "data-gen",
+                                  "Simulation-Output",
+                                  "01_STD-v-NP1", 
+                                  paste0("NMC_", PHI, ".rds")))
